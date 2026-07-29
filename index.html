@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Firebase Test</title>
+
+<style>
+body{
+    font-family:Arial,sans-serif;
+    background:#f5f5f5;
+    padding:40px;
+}
+.container{
+    max-width:500px;
+    margin:auto;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,.1);
+}
+input{
+    width:100%;
+    padding:10px;
+    margin:10px 0;
+    font-size:16px;
+}
+button{
+    width:100%;
+    padding:12px;
+    background:#007bff;
+    color:white;
+    border:none;
+    border-radius:6px;
+    font-size:16px;
+    cursor:pointer;
+}
+button:hover{
+    background:#0056b3;
+}
+#status{
+    margin-top:15px;
+    font-weight:bold;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Firebase Test App</h2>
+
+    <input id="name" placeholder="Enter Name">
+    <input id="age" type="number" placeholder="Enter Age">
+
+    <button id="saveBtn">Save to Firebase</button>
+
+    <p id="status"></p>
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBOfF5lBj2S9l3AlHmvpx9Ui3oueU9CimQ",
+  authDomain: "way-debt-track.firebaseapp.com",
+  projectId: "way-debt-track",
+  storageBucket: "way-debt-track.firebasestorage.app",
+  messagingSenderId: "791614563252",
+  appId: "1:791614563252:web:a1229160e76018970c08e1"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+document.getElementById("saveBtn").addEventListener("click", async ()=>{
+
+    const name=document.getElementById("name").value;
+    const age=Number(document.getElementById("age").value);
+
+    try{
+
+        await addDoc(collection(db,"testData"),{
+            name,
+            age,
+            createdAt:serverTimestamp()
+        });
+
+        document.getElementById("status").innerHTML="✅ Saved Successfully";
+
+    }catch(e){
+
+        document.getElementById("status").innerHTML="❌ "+e.message;
+        console.log(e);
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
