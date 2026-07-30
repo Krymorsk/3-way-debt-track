@@ -181,26 +181,41 @@ flex-shrink:0;
 .profile-desc{margin-top:4px;color:var(--muted)}
 
 .login-panel{
-margin-top:24px;
-padding:24px;
-border-radius:26px;
-background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.03));
-backdrop-filter:blur(28px);
-border:1px solid var(--border);
-display:flex;
-flex-direction:column;
-gap:18px;
-opacity:0;
-max-height:0;
-overflow:hidden;
-transform:translateY(25px);
-transition:all .75s var(--ease);
+
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+
+    opacity:0;
+
+    max-height:0;
+
+    overflow:hidden;
+
+    transform:translateY(25px);
+
+    transition:
+
+        opacity .6s ease,
+
+        transform .6s ease,
+
+        max-height .6s ease,
+
+        margin-top .6s ease;
+
 }
 
 .login-panel.show{
-opacity:1;
-max-height:500px;
-transform:none;
+
+    opacity:1;
+
+    max-height:500px;
+
+    transform:translateY(0);
+
+    margin-top:24px;
+
 }
 
 .hidden{display:none}
