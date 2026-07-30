@@ -154,6 +154,107 @@ backBtn.addEventListener("click", () => {
 });
 
 // --------------------
+// Login
+// --------------------
+
+let isSubmitting = false;
+
+async function attemptLogin() {
+
+    if (isSubmitting) return;
+
+    if (!selectedUser) {
+
+        errorMessage.textContent =
+            "Please choose a profile first.";
+
+        return;
+
+    }
+
+    if (!auth) {
+
+        errorMessage.textContent =
+            "Firebase configuration missing.";
+
+        return;
+
+    }
+
+    const email = USER_MAP[selectedUser];
+    const password = passwordEl.value;
+
+    if (!password) {
+
+        errorMessage.textContent =
+            "Please enter a password.";
+
+        return;
+
+    }
+
+    isSubmitting = true;
+    setLoading(true);
+    errorMessage.textContent = "";
+
+    try {
+
+        await signInWithEmailAndPassword(auth, email, password);
+        // onAuthStateChanged (below) handles the redirect to dashboard.html
+
+    } catch (err) {
+
+        console.error(err);
+
+        const code = err?.code || "";
+
+        if (code === "auth/invalid-credential" ||
+            code === "auth/wrong-password" ||
+            code === "auth/user-not-found") {
+
+            errorMessage.textContent =
+                "Incorrect password. Please try again.";
+
+        } else if (code === "auth/too-many-requests") {
+
+            errorMessage.textContent =
+                "Too many attempts. Please wait a moment and try again.";
+
+        } else if (code === "auth/network-request-failed") {
+
+            errorMessage.textContent =
+                "Network error. Check your connection and try again.";
+
+        } else {
+
+            errorMessage.textContent =
+                "Could not sign in. Please try again.";
+
+        }
+
+    } finally {
+
+        isSubmitting = false;
+        setLoading(false);
+
+    }
+
+}
+
+loginBtn.addEventListener("click", attemptLogin);
+
+passwordEl.addEventListener("keydown", e => {
+
+    if (e.key === "Enter") {
+
+        e.preventDefault();
+        attemptLogin();
+
+    }
+
+});
+
+// --------------------
 // Init Firebase
 // --------------------
 
@@ -162,6 +263,12 @@ if (isRealConfig(firebaseConfig)) {
     const app = initializeApp(firebaseConfig);
 
     auth = getAuth(app);
+
+    setPersistence(auth, browserLocalPersistence).catch(err => {
+
+        console.warn("Persistence setup failed:", err);
+
+    });
 
     onAuthStateChanged(auth, user => {
 
@@ -179,5 +286,7 @@ else {
 
     errorMessage.textContent =
         "Firebase configuration missing.";
+
+    loginBtn.disabled = true;
 
 }

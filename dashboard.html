@@ -11,8 +11,14 @@
   <link rel="stylesheet" href="./style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js" defer></script>
   <script type="module" src="./app.js" defer></script>
+  <style>
+    body.auth-pending > *:not(#authGate) { display: none !important; }
+  </style>
 </head>
-<body>
+<body class="auth-pending">
+  <div id="authGate" style="display:flex;min-height:100vh;align-items:center;justify-content:center;color:#8aa0c8;font-family:Inter,system-ui,sans-serif;">
+    Checking session…
+  </div>
   <div class="bg-orb orb-1"></div>
   <div class="bg-orb orb-2"></div>
   <div class="bg-grid"></div>

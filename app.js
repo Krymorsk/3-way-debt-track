@@ -1,5 +1,5 @@
 import { requireAuth, logoutUser } from "./auth.js";
-await requireAuth();
+const currentUser = await requireAuth();
 import { firebaseConfig } from './firebase.js';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
 import {
@@ -1318,4 +1318,8 @@ function init() {
   initFirebase();
 }
 
-init();
+if (currentUser) {
+  document.body.classList.remove('auth-pending');
+  init();
+}
+// else: requireAuth() has already redirected to the login page
