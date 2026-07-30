@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Splitwise Trio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <main class="container">
+        <div class="brand">
+            <div class="orbit" aria-hidden="true">
+                <span class="orbit-center">₹</span>
+                <span class="orbit-ring">
+                    <span class="orbit-dot dot-arish"></span>
+                    <span class="orbit-dot dot-ayman"></span>
+                    <span class="orbit-dot dot-vishist"></span>
+                </span>
+            </div>
+            <p class="kicker">Shared money, three people</p>
+            <h1 class="title">Splitwise Trio</h1>
+            <p class="subtitle">Pick your name to sign in</p>
+            <p class="tagline">Just the three of you — no one else gets in.</p>
+        </div>
+
+        <!-- ========================= -->
+        <!-- Profile Cards -->
+        <!-- ========================= -->
+        <section class="profiles" id="profiles">
+            <div class="profile" data-user="arish">
+                <div class="avatar arish">AR</div>
+                <div class="profile-info">
+                    <div class="profile-name">Arish</div>
+                    <div class="profile-desc">Tap to sign in</div>
+                </div>
+            </div>
+            <div class="profile" data-user="ayman">
+                <div class="avatar ayman">AY</div>
+                <div class="profile-info">
+                    <div class="profile-name">Ayman</div>
+                    <div class="profile-desc">Tap to sign in</div>
+                </div>
+            </div>
+            <div class="profile" data-user="vishist">
+                <div class="avatar vishist">VI</div>
+                <div class="profile-info">
+                    <div class="profile-name">Vishist</div>
+                    <div class="profile-desc">Tap to sign in</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================= -->
+        <!-- Login Panel -->
+        <!-- ========================= -->
+        <div class="login-panel-wrap hidden" id="loginPanel">
+            <section class="login-panel">
+                <button class="back-btn" id="backBtn">← Change profile</button>
+                <div class="selected-user">
+                    <div class="avatar" id="selectedAvatar">AR</div>
+                    <div>
+                        <h2 id="selectedName">Arish</h2>
+                        <p class="profile-desc">Enter your password</p>
+                    </div>
+                </div>
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Password"
+                    autocomplete="current-password">
+                <button class="login-btn" id="loginBtn">Login</button>
+                <p id="errorMessage" class="error-message"></p>
+            </section>
+        </div>
+    </main>
+    <script type="module" src="login.js"></script>
+</body>
+</html>
