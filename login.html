@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#070816" />
+  <title>Splitwise Trio • Login</title>
+  <style>
+    :root {
+      --bg: #070816;
+      --bg-2: #0b1026;
+      --card: rgba(14, 18, 40, 0.66);
+      --card-strong: rgba(18, 24, 52, 0.92);
+      --text: #eef2ff;
+      --muted: #a5b0d6;
+      --line: rgba(150, 170, 255, 0.16);
+      --accent: #7c6cff;
+      --accent-2: #38d8ff;
+      --accent-3: #7cf6c5;
+      --danger: #ff6b8a;
+      --success: #7cf6c5;
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --blur: blur(22px);
+      --speed: 220ms cubic-bezier(.2,.8,.2,1);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 12% 18%, rgba(124,108,255,.18), transparent 20%),
+        radial-gradient(circle at 88% 12%, rgba(56,216,255,.12), transparent 18%),
+        radial-gradient(circle at 40% 90%, rgba(124,246,197,.10), transparent 20%),
+        linear-gradient(180deg, #050612 0%, #070816 45%, #050713 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+      background-size: 36px 36px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.9), rgba(0,0,0,.15));
+      opacity: .35;
+      z-index: 0;
+    }
+
+    .aurora {
+      position: fixed;
+      inset: -10%;
+      pointer-events: none;
+      filter: blur(30px);
+      opacity: .55;
+      z-index: 0;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(124,108,255,.22), transparent 24%),
+        radial-gradient(circle at 80% 25%, rgba(56,216,255,.18), transparent 22%),
+        radial-gradient(circle at 60% 82%, rgba(124,246,197,.11), transparent 24%);
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift {
+      from { transform: translate3d(-1%, -1%, 0) scale(1); }
+      to { transform: translate3d(1.5%, 1%, 0) scale(1.04); }
+    }
+
+    .petal-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .petal {
+      position: absolute;
+      top: -10vh;
+      width: 14px;
+      height: 10px;
+      border-radius: 70% 30% 65% 35% / 55% 45% 55% 45%;
+      background: linear-gradient(135deg, rgba(255,255,255,.9), rgba(255,166,215,.85), rgba(124,108,255,.72));
+      filter: drop-shadow(0 6px 10px rgba(124,108,255,.22));
+      opacity: .8;
+      transform: rotate(0deg);
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      0%   { transform: translate3d(0, -10vh, 0) rotate(0deg); }
+      100% { transform: translate3d(var(--drift), 112vh, 0) rotate(360deg); }
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 2;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .shell {
+      width: min(1120px, 100%);
+      display: grid;
+      grid-template-columns: 1.02fr .98fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .hero, .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(180deg, rgba(16, 20, 42, .72), rgba(10, 13, 31, .58));
+      box-shadow: var(--shadow);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero {
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 640px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(124,108,255,.28);
+      background: rgba(124,108,255,.10);
+      color: #dcd7ff;
+      font-weight: 700;
+      letter-spacing: .02em;
+      font-size: 13px;
+    }
+
+    .badge .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent-2), var(--accent));
+      box-shadow: 0 0 18px rgba(56,216,255,.55);
+    }
+
+    .headline {
+      margin: 22px 0 0;
+      font-size: clamp(3rem, 6vw, 5.8rem);
+      line-height: .92;
+      letter-spacing: -.06em;
+      max-width: 10ch;
+    }
+
+    .headline span {
+      background: linear-gradient(90deg, #f8fbff, #bfc8ff 45%, #8ef8ff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subtext {
+      margin: 18px 0 0;
+      max-width: 52ch;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.7;
+    }
+
+    .orbs {
+      position: relative;
+      flex: 1;
+      min-height: 320px;
+      margin-top: 24px;
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,.06);
+      background:
+        radial-gradient(circle at 20% 30%, rgba(124,108,255,.22), transparent 18%),
+        radial-gradient(circle at 78% 28%, rgba(56,216,255,.16), transparent 20%),
+        radial-gradient(circle at 52% 74%, rgba(124,246,197,.11), transparent 18%),
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(2px);
+      opacity: .85;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .orb.one {
+      width: 150px; height: 150px;
+      left: 8%; top: 20%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.88), rgba(124,108,255,.55) 35%, rgba(124,108,255,.08) 75%, transparent 76%);
+      box-shadow: 0 0 60px rgba(124,108,255,.25);
+    }
+
+    .orb.two {
+      width: 210px; height: 210px;
+      right: -20px; top: 8%;
+      background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.82), rgba(56,216,255,.52) 35%, rgba(56,216,255,.08) 74%, transparent 76%);
+      box-shadow: 0 0 70px rgba(56,216,255,.20);
+      animation-delay: -2s;
+    }
+
+    .orb.three {
+      width: 120px; height: 120px;
+      left: 44%; bottom: 16%;
+      background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.85), rgba(124,246,197,.48) 35%, rgba(124,246,197,.08) 74%, transparent 76%);
+      box-shadow: 0 0 46px rgba(124,246,197,.18);
+      animation-delay: -4s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-18px) scale(1.03); }
+    }
+
+    .hero-card {
+      position: absolute;
+      inset: auto 20px 20px 20px;
+      padding: 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: linear-gradient(180deg, rgba(17, 22, 46, .72), rgba(11, 13, 28, .78));
+      backdrop-filter: blur(18px);
+      display: grid;
+      gap: 14px;
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08);
+      color: #d9e2ff;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .status-chip i {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-3), var(--accent-2));
+      box-shadow: 0 0 16px rgba(124,246,197,.5);
+      display: inline-block;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .mini {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+    }
+
+    .mini .label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .mini .value {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -.03em;
+    }
+
+    .card {
+      padding: 24px;
+      min-height: 640px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(135deg, rgba(124,108,255,.12), rgba(56,216,255,.08), transparent 55%);
+      opacity: .7;
+      pointer-events: none;
+      mask: linear-gradient(#000, transparent 70%);
+    }
+
+    .login-head {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      font-size: 26px;
+      background: linear-gradient(135deg, #8b7bff, #59d5ff 55%, #7cf6c5);
+      box-shadow: 0 18px 36px rgba(124,108,255,.26);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logo::after {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,.45) 45%, transparent 60%);
+      transform: rotate(20deg) translateX(-60%);
+      animation: shine 4.4s ease-in-out infinite;
+    }
+
+    @keyframes shine {
+      0%, 65% { transform: rotate(20deg) translateX(-80%); opacity: 0; }
+      80% { opacity: 1; }
+      100% { transform: rotate(20deg) translateX(80%); opacity: 0; }
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      letter-spacing: -.03em;
+    }
+
+    .brand p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    .form-title {
+      position: relative;
+      z-index: 1;
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 3vw, 2.7rem);
+      line-height: 1;
+      letter-spacing: -.05em;
+    }
+
+    .form-subtitle {
+      position: relative;
+      z-index: 1;
+      margin: 0 0 24px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 44ch;
+    }
+
+    .form {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 16px;
+    }
+
+    .field {
+      position: relative;
+    }
+
+    .field input {
+      width: 100%;
+      border: 1px solid rgba(163, 177, 255, 0.16);
+      background: rgba(8, 10, 22, 0.72);
+      color: var(--text);
+      padding: 18px 16px 18px 54px;
+      border-radius: 18px;
+      outline: none;
+      font-size: 1rem;
+      transition: border-color var(--speed), transform var(--speed), box-shadow var(--speed), background var(--speed);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
+    }
+
+    .field input:focus {
+      border-color: rgba(124,108,255,.56);
+      box-shadow: 0 0 0 4px rgba(124,108,255,.12), inset 0 1px 0 rgba(255,255,255,.03);
+      transform: translateY(-1px);
+      background: rgba(12, 15, 30, 0.88);
+    }
+
+    .field label {
+      position: absolute;
+      left: 54px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9da9d6;
+      pointer-events: none;
+      transition: all var(--speed);
+      background: linear-gradient(180deg, transparent, transparent);
+      padding: 0 6px;
+    }
+
+    .field input:focus + label,
+    .field input:not(:placeholder-shown) + label {
+      top: 0;
+      transform: translateY(-50%) scale(.88);
+      left: 44px;
+      color: #dfe5ff;
+      background: linear-gradient(180deg, rgba(10,13,28,1), rgba(10,13,28,1));
+      border-radius: 999px;
+    }
+
+    .field .icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      color: #d5dfff;
+      opacity: .9;
+      font-size: 1rem;
+    }
+
+    .field .toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 0;
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: transform var(--speed), background var(--speed);
+    }
+
+    .field .toggle:hover { transform: translateY(-50%) scale(1.04); background: rgba(255,255,255,.08); }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .check {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: .96rem;
+      user-select: none;
+    }
+
+    .check input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+    }
+
+    .link {
+      color: #c7d2ff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: .95rem;
+    }
+
+    .link:hover { text-decoration: underline; }
+
+    .button {
+      position: relative;
+      border: 0;
+      cursor: pointer;
+      border-radius: 18px;
+      padding: 16px 18px;
+      font-weight: 800;
+      color: white;
+      font-size: 1rem;
+      letter-spacing: .01em;
+      background: linear-gradient(90deg, #6d7cff, #7b5cff 45%, #38d8ff 100%);
+      box-shadow: 0 16px 32px rgba(108, 98, 255, .26), inset 0 1px 0 rgba(255,255,255,.18);
+      overflow: hidden;
+      isolation: isolate;
+      transition: transform var(--speed), box-shadow var(--speed), filter var(--speed);
+    }
+
+    .button::before {
+      content: "";
+      position: absolute;
+      inset: -40% -20%;
+      background: linear-gradient(120deg, transparent 35%, rgba(255,255,255,.42) 48%, transparent 60%);
+      transform: translateX(-60%) rotate(10deg);
+      transition: transform .8s ease;
+      z-index: -1;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 20px 42px rgba(108, 98, 255, .36), 0 0 0 6px rgba(124,108,255,.08);
+      filter: saturate(1.05);
+    }
+
+    .button:hover::before { transform: translateX(60%) rotate(10deg); }
+
+    .button:active { transform: translateY(1px) scale(.995); }
+
+    .button[disabled] {
+      cursor: progress;
+      opacity: .82;
+      transform: none;
+    }
+
+    .button .spinner {
+      display: none;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.35);
+      border-top-color: white;
+      animation: spin .75s linear infinite;
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+
+    .button.loading .spinner { display: inline-block; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .assist {
+      position: relative;
+      z-index: 1;
+      margin-top: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .assist-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .preset {
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.04);
+      color: #dbe3ff;
+      border-radius: 16px;
+      padding: 12px 14px;
+      text-align: left;
+      cursor: pointer;
+      transition: transform var(--speed), background var(--speed), border-color var(--speed);
+    }
+
+    .preset:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.07);
+      border-color: rgba(124,108,255,.32);
+    }
+
+    .preset strong { display: block; font-size: .98rem; }
+    .preset span { display: block; color: var(--muted); font-size: .82rem; margin-top: 3px; }
+
+    .footer-note {
+      margin-top: 18px;
+      color: #97a5d6;
+      font-size: .88rem;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    .footer-note code {
+      color: #dce5ff;
+      background: rgba(255,255,255,.06);
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.08);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(24px);
+      min-width: min(92vw, 420px);
+      background: rgba(10, 13, 28, 0.88);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,.1);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      border-radius: 18px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--speed), transform var(--speed);
+      z-index: 40;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+
+    .toast .badge-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, rgba(124,108,255,.95), rgba(56,216,255,.85));
+      flex: 0 0 auto;
+      font-size: 18px;
+    }
+
+    .toast.success .badge-icon { background: linear-gradient(135deg, rgba(124,246,197,.95), rgba(56,216,255,.85)); }
+    .toast.error .badge-icon { background: linear-gradient(135deg, rgba(255,107,138,.96), rgba(124,108,255,.9)); }
+
+    .toast strong { display: block; margin-bottom: 2px; }
+    .toast p { margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.45; }
+
+    @media (max-width: 980px) {
+      .shell { grid-template-columns: 1fr; }
+      .hero, .card { min-height: auto; }
+      .hero { padding-bottom: 220px; }
+    }
+
+    @media (max-width: 640px) {
+      .wrap { padding: 14px; }
+      .hero, .card { border-radius: 24px; }
+      .hero { padding: 22px; }
+      .card { padding: 20px; }
+      .headline { max-width: 12ch; font-size: clamp(2.6rem, 10vw, 4rem); }
+      .mini-grid, .assist-grid { grid-template-columns: 1fr; }
+      .login-head { align-items: flex-start; flex-direction: column; }
+      .form-title { font-size: 2.1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="aurora"></div>
+  <div class="petal-layer" aria-hidden="true" id="petalLayer"></div>
+
+  <main class="wrap">
+    <section class="shell" aria-label="Login page">
+      <div class="hero">
+        <div>
+          <div class="badge"><span class="dot"></span> Secure Trio Access</div>
+          <h2 class="headline"><span>Enter the expense arena.</span></h2>
+          <p class="subtext">
+            A premium, anime-inspired login for Splitwise Trio with glowing motion, glass layers,
+            and a futuristic dark theme built for mobile and desktop.
+          </p>
+        </div>
+
+        <div class="orbs" aria-hidden="true">
+          <div class="orb one"></div>
+          <div class="orb two"></div>
+          <div class="orb three"></div>
+          <div class="hero-card">
+            <div class="status-row">
+              <div class="status-chip"><i></i> Anime power-up mode</div>
+              <div class="status-chip">⚡ Smooth UI</div>
+            </div>
+
+            <div class="mini-grid">
+              <div class="mini">
+                <div class="label">Secure</div>
+                <div class="value">Auth</div>
+              </div>
+              <div class="mini">
+                <div class="label">Style</div>
+                <div class="value">Ultra</div>
+              </div>
+              <div class="mini">
+                <div class="label">Speed</div>
+                <div class="value">Fast</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="login-head">
+          <div class="brand">
+            <div class="logo">✦</div>
+            <div>
+              <h1>Splitwise Trio</h1>
+              <p>Arish • Ayman • Vishist</p>
+            </div>
+          </div>
+          <div class="status-chip"><i></i> Firebase ready</div>
+        </div>
+
+        <h3 class="form-title">Welcome back</h3>
+        <p class="form-subtitle">
+          Log in to continue tracking who paid, who owes, and what is settled.
+        </p>
+
+        <form class="form" id="loginForm" autocomplete="on">
+          <div class="field">
+            <div class="icon">👤</div>
+            <input id="username" name="username" type="text" placeholder=" " autocomplete="username" required />
+            <label for="username">Username or Email</label>
+          </div>
+
+          <div class="field">
+            <div class="icon">🔒</div>
+            <input id="password" name="password" type="password" placeholder=" " autocomplete="current-password" required />
+            <label for="password">Password</label>
+            <button class="toggle" type="button" id="togglePw" aria-label="Show password">👁️</button>
+          </div>
+
+          <div class="row">
+            <label class="check">
+              <input id="rememberMe" type="checkbox" checked />
+              Remember me
+            </label>
+            <a class="link" href="#" onclick="event.preventDefault(); toast('Tip', 'Create 3 Firebase Auth users for Arish, Ayman, and Vishist.')">Need setup help?</a>
+          </div>
+
+          <button class="button" id="loginBtn" type="submit">
+            <span class="spinner" aria-hidden="true"></span>
+            <span id="loginBtnText">Enter the dashboard</span>
+          </button>
+        </form>
+
+        <div class="assist">
+          <div class="assist-grid">
+            <button class="preset" type="button" data-user="Arish">
+              <strong>Arish</strong>
+              <span>Quick fill username</span>
+            </button>
+            <button class="preset" type="button" data-user="Ayman">
+              <strong>Ayman</strong>
+              <span>Quick fill username</span>
+            </button>
+            <button class="preset" type="button" data-user="Vishist">
+              <strong>Vishist</strong>
+              <span>Quick fill username</span>
+            </button>
+          </div>
+
+          <div class="footer-note">
+            Connect this page to Firebase Authentication. Use the same three account emails for
+            your trio and redirect to <code>index.html</code> after login.
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true">
+    <div class="badge-icon">✦</div>
+    <div>
+      <strong id="toastTitle">Ready</strong>
+      <p id="toastBody">Anime login loaded successfully.</p>
+    </div>
+  </div>
+
+  <script type="module">
+    // --- Optional Firebase Auth hookup --------------------------------------
+    // Replace the imports below with your project files as needed.
+    // This page is styled to be drop-in ready for Firebase Authentication.
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+    import {
+      getAuth,
+      setPersistence,
+      browserLocalPersistence,
+      signInWithEmailAndPassword,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+    // If you keep firebaseConfig inside ./firebase.js, export it there.
+    // Example: export const firebaseConfig = { ... };
+    import { firebaseConfig } from "./firebase.js";
+
+    const USER_MAP = {
+      arish: "arish@splitwise.local",
+      ayman: "ayman@splitwise.local",
+      vishist: "vishist@splitwise.local"
+    };
+
+    const form = document.getElementById("loginForm");
+    const usernameEl = document.getElementById("username");
+    const passwordEl = document.getElementById("password");
+    const loginBtn = document.getElementById("loginBtn");
+    const loginBtnText = document.getElementById("loginBtnText");
+    const togglePw = document.getElementById("togglePw");
+    const rememberMe = document.getElementById("rememberMe");
+    const toastEl = document.getElementById("toast");
+    const toastTitle = document.getElementById("toastTitle");
+    const toastBody = document.getElementById("toastBody");
+    const petalLayer = document.getElementById("petalLayer");
+
+    let auth = null;
+
+    function isRealConfig(cfg) {
+      return cfg && typeof cfg === "object" &&
+        String(cfg.apiKey || "").trim() &&
+        !String(cfg.apiKey).includes("YOUR_") &&
+        !String(cfg.projectId || "").includes("YOUR_");
+    }
+
+    function toast(title, message, kind = "info") {
+      toastTitle.textContent = title;
+      toastBody.textContent = message;
+      toastEl.className = `toast show ${kind}`;
+      const icon = toastEl.querySelector(".badge-icon");
+      icon.textContent = kind === "success" ? "✓" : kind === "error" ? "!" : "✦";
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => toastEl.classList.remove("show"), 3200);
+    }
+
+    function setLoading(loading) {
+      loginBtn.disabled = loading;
+      loginBtn.classList.toggle("loading", loading);
+      loginBtnText.textContent = loading ? "Unlocking..." : "Enter the dashboard";
+    }
+
+    function normalizeUsername(value) {
+      return value.trim().toLowerCase().replace(/[^a-z0-9@._-]/g, "");
+    }
+
+    function mapUsernameToEmail(input) {
+      const cleaned = normalizeUsername(input);
+      if (cleaned.includes("@")) return cleaned;
+      return USER_MAP[cleaned] || cleaned;
+    }
+
+    function spawnPetals() {
+      const count = 18;
+      for (let i = 0; i < count; i++) {
+        const petal = document.createElement("span");
+        petal.className = "petal";
+        const left = Math.random() * 100;
+        const size = 8 + Math.random() * 14;
+        const delay = Math.random() * -18;
+        const duration = 10 + Math.random() * 12;
+        const drift = (-40 + Math.random() * 80).toFixed(0) + "px";
+        petal.style.left = left + "vw";
+        petal.style.width = size + "px";
+        petal.style.height = (size * 0.7) + "px";
+        petal.style.animationDelay = delay + "s";
+        petal.style.animationDuration = duration + "s";
+        petal.style.setProperty("--drift", drift);
+        petal.style.opacity = (0.35 + Math.random() * 0.5).toFixed(2);
+        petalLayer.appendChild(petal);
+      }
+    }
+
+    document.querySelectorAll(".preset").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        usernameEl.value = btn.dataset.user;
+        usernameEl.focus();
+        toast("Username filled", `${btn.dataset.user} is ready.`, "success");
+      });
+    });
+
+    togglePw.addEventListener("click", () => {
+      const isPassword = passwordEl.type === "password";
+      passwordEl.type = isPassword ? "text" : "password";
+      togglePw.textContent = isPassword ? "🙈" : "👁️";
+      togglePw.setAttribute("aria-label", isPassword ? "Hide password" : "Show password");
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = mapUsernameToEmail(usernameEl.value);
+      const password = passwordEl.value;
+
+      if (!email || !password) {
+        toast("Missing details", "Enter username/email and password.", "error");
+        return;
+      }
+
+      if (!auth) {
+        toast("Firebase not ready", "Make sure firebase.js exports a valid firebaseConfig.", "error");
+        return;
+      }
+
+      setLoading(true);
+      try {
+        const persistence = rememberMe.checked ? browserLocalPersistence : browserLocalPersistence;
+        await setPersistence(auth, persistence);
+        await signInWithEmailAndPassword(auth, email, password);
+        toast("Success", "Logging you in...", "success");
+        setTimeout(() => {
+          window.location.href = "./index.html";
+        }, 700);
+      } catch (err) {
+        console.error(err);
+        const message = err?.message?.includes("auth/user-not-found")
+          ? "Account not found. Create the Firebase Auth user first."
+          : err?.message?.includes("auth/wrong-password")
+            ? "Wrong password. Try again."
+            : err?.message?.includes("auth/invalid-email")
+              ? "Use a valid username or email."
+              : "Login failed. Check Firebase Auth and credentials.";
+        toast("Login failed", message, "error");
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    // Soft parallax for premium feel.
+    const shell = document.querySelector(".shell");
+    shell.addEventListener("mousemove", (e) => {
+      const rect = shell.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      document.querySelectorAll(".hero, .card").forEach((el, index) => {
+        const strength = index === 0 ? 8 : 6;
+        el.style.transform = `translate3d(${x * strength}px, ${y * strength}px, 0)`;
+      });
+    });
+    shell.addEventListener("mouseleave", () => {
+      document.querySelectorAll(".hero, .card").forEach((el) => {
+        el.style.transform = "translate3d(0,0,0)";
+      });
+    });
+
+    try {
+      spawnPetals();
+      toast("Ready", "Anime login loaded successfully.", "success");
+    } catch {}
+
+    // Initialize Firebase only when a real config is present.
+    if (isRealConfig(firebaseConfig)) {
+      const app = initializeApp(firebaseConfig);
+      auth = getAuth(app);
+
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          toast("Welcome back", "Redirecting to the dashboard...", "success");
+          setTimeout(() => {
+            window.location.href = "./index.html";
+          }, 500);
+        }
+      });
+    } else {
+      toast("Firebase config missing", "Add your real config in firebase.js to enable login.", "error");
+    }
+  </script>
+</body>
+</html>
