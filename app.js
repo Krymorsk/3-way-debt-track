@@ -1139,6 +1139,29 @@ function bindEvents() {
   });
 
   els.settingsShortcut.addEventListener('click', () => showView('settings'));
+  const logoutBtn = document.getElementById("logoutBtn");
+
+logoutBtn?.addEventListener("click", async () => {
+    const ok = await confirmAction(
+        "Logout?",
+        "Are you sure you want to logout?"
+    );
+
+    if (!ok) return;
+
+    try {
+        await logoutUser();
+
+        toast("Logged out", "See you next time 👋", "success");
+
+        setTimeout(() => {
+            window.location.href = "./index.html";
+        }, 400);
+    } catch (err) {
+        console.error(err);
+        toast("Logout failed", err.message || "Unable to logout.", "error");
+    }
+});
   els.fab.addEventListener('click', () => openModal('create'));
   els.mobileAddBtn.addEventListener('click', () => openModal('create'));
   els.quickExpenseBtn.addEventListener('click', () => openModal('create', {
