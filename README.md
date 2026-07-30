@@ -1,38 +1,32 @@
 # Splitwise Trio
 
-A premium, mobile-first shared expense tracker for **Arish**, **Ayman**, and **Vishist**.
+A premium, Firebase-backed shared expense tracker for exactly three friends:
+
+- Arish
+- Ayman
+- Vishist
+
+## Files
+
+- `index.html` — dashboard entry point
+- `app.js` — main app logic
+- `firebase.js` — paste your Firebase config here
+- `auth.js` — Firebase Authentication helpers
+- `login.html` — anime-style login page
+- `login.js` — login page interactions
+- `style.css` — dashboard styling
+- `README.md` — this file
 
 ## Setup
 
-1. Open `firebase.js`
-2. Paste your Firebase Web App config into `firebaseConfig`
-3. Create a Firestore collection named `transactions`
-4. Deploy the folder to GitHub Pages
+1. Paste your real Firebase config into `firebase.js`.
+2. Enable **Email/Password** in Firebase Authentication.
+3. Create the three user accounts for Arish, Ayman, and Vishist.
+4. Deploy to GitHub Pages.
+5. Open `login.html` first, or keep `index.html` as the landing page and let `app.js` redirect unauthenticated users.
 
-## Features
+## Notes
 
-- Firestore realtime sync
-- Offline cache support when available
-- Add / edit / delete / undo transactions
-- Expense, borrow, and repayment flows
-- Automatic settlement suggestions
-- Filters, search, sort, and analytics charts
-- Export / import JSON backups
-- Dark mode by default
-
-## Firestore document shape
-
-Each transaction document uses:
-
-- amount
-- description
-- paidBy
-- splitBetween
-- transactionType
-- lender
-- borrower
-- notes
-- date
-- time
-- createdAt
-- updatedAt
+- The app uses Firestore for transactions and balances.
+- The login page uses Firebase Auth and maps the three profile buttons to hidden emails.
+- Keep Firestore rules locked down before using the app outside testing.

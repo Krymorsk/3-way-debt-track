@@ -1,40 +1,54 @@
-// auth.js
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
 import {
   getAuth,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut
-} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 import { firebaseConfig } from "./firebase.js";
 
 let app = null;
 let auth = null;
 
-function ensureFirebase() {
+function isRealConfig(cfg) {
+  return cfg &&
+    typeof cfg === "object" &&
+    String(cfg.apiKey || "").trim() &&
+    !String(cfg.apiKey).includes("YOUR_") &&
+    !String(cfg.projectId || "").includes("YOUR_");
+}
+
+function ensureAuth() {
+  if (!isRealConfig(firebaseConfig)) {
+    throw new Error("Firebase config is missing or still contains placeholders.");
+  }
+
   if (!app) app = initializeApp(firebaseConfig);
   if (!auth) auth = getAuth(app);
   return auth;
 }
 
 export function getAuthInstance() {
-  return ensureFirebase();
+  return ensureAuth();
 }
 
 export function waitForAuth() {
-  const authRef = ensureFirebase();
+  const authRef = ensureAuth();
   return new Promise((resolve) => {
-    onAuthStateChanged(authRef, (user) => resolve(user));
+    const unsubscribe = onAuthStateChanged(authRef, (user) => {
+      unsubscribe?.();
+      resolve(user || null);
+    });
   });
 }
 
 export async function loginWithEmail(email, password) {
-  const authRef = ensureFirebase();
+  const authRef = ensureAuth();
   return signInWithEmailAndPassword(authRef, email, password);
 }
 
 export async function logoutUser() {
-  const authRef = ensureFirebase();
+  const authRef = ensureAuth();
   return signOut(authRef);
 }
 

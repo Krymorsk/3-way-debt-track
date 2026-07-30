@@ -1,5 +1,3 @@
-import { requireAuth } from "./auth.js";
-await requireAuth();
 import { firebaseConfig } from './firebase.js';
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js';
 import {

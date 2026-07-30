@@ -430,7 +430,6 @@
       color: #9da9d6;
       pointer-events: none;
       transition: all var(--speed);
-      background: linear-gradient(180deg, transparent, transparent);
       padding: 0 6px;
     }
 
@@ -541,7 +540,6 @@
     }
 
     .button:hover::before { transform: translateX(60%) rotate(10deg); }
-
     .button:active { transform: translateY(1px) scale(.995); }
 
     .button[disabled] {
@@ -562,7 +560,6 @@
     }
 
     .button.loading .spinner { display: inline-block; }
-
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .assist {
@@ -758,7 +755,7 @@
               <input id="rememberMe" type="checkbox" checked />
               Remember me
             </label>
-            <a class="link" href="#" onclick="event.preventDefault(); toast('Tip', 'Create 3 Firebase Auth users for Arish, Ayman, and Vishist.')">Need setup help?</a>
+            <a class="link" href="#" onclick="event.preventDefault(); alert('Create 3 Firebase Auth users for Arish, Ayman, and Vishist.')">Need setup help?</a>
           </div>
 
           <button class="button" id="loginBtn" type="submit">
@@ -784,8 +781,8 @@
           </div>
 
           <div class="footer-note">
-            Connect this page to Firebase Authentication. Use the same three account emails for
-            your trio and redirect to <code>index.html</code> after login.
+            Create the Firebase Auth users, then enter the password here. The username buttons map to
+            the trio’s hidden emails automatically.
           </div>
         </div>
       </div>
@@ -799,6 +796,7 @@
       <p id="toastBody">Anime login loaded successfully.</p>
     </div>
   </div>
-<script type="module" src="./login.js"></script>
+
+  <script type="module" src="./login.js"></script>
 </body>
 </html>
