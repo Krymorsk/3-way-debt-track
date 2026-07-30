@@ -190,14 +190,13 @@ body::before{
     0 12px 30px rgba(0,0,0,.32),
     inset 0 1px rgba(255,255,255,.06);
   opacity:0;
-  transform:translateY(14px);
+  transform:translateY(14px) translateZ(0);
   animation:card-in .5s var(--ease) forwards;
+  will-change:transform, opacity;
   transition:
-    transform .5s var(--ease),
-    box-shadow .5s var(--ease),
-    border-color .3s,
-    opacity .4s,
-    filter .4s;
+    transform .4s var(--ease),
+    opacity .4s var(--ease),
+    border-color .3s;
 }
 .profile:nth-child(1){ animation-delay:.05s }
 .profile:nth-child(2){ animation-delay:.13s }
@@ -220,21 +219,21 @@ body::before{
 }
 
 .profile:hover{
-  transform:translateY(-6px) scale(1.015);
-  box-shadow:0 24px 60px rgba(0,0,0,.4);
+  transform:translateY(-6px) scale(1.015) translateZ(0);
   border-color:rgba(255,255,255,.16);
 }
 
 .profile.active{
-  transform:translateY(-10px) scale(1.03);
-  box-shadow:0 30px 80px rgba(111,147,255,.28);
+  transform:translateY(-10px) scale(1.03) translateZ(0);
   border-color:rgba(111,147,255,.4);
 }
 
+/* No blur() here on purpose — animating filter forces a repaint of
+   the whole element every frame and is the single biggest cause of
+   dropped frames on phones. Opacity + scale is compositor-only. */
 .profile.fade{
-  opacity:.12;
-  filter:blur(4px);
-  transform:scale(.94);
+  opacity:.25;
+  transform:scale(.94) translateZ(0);
   pointer-events:none;
 }
 
@@ -288,6 +287,19 @@ body::before{
    Login panel
 -------------------- */
 
+/* Wrapper drives the height animation via grid-template-rows
+   (0fr -> 1fr). This is compositor-friendly — no layout thrash on
+   every frame like max-height — so it stays smooth on phones. */
+.login-panel-wrap{
+  display:grid;
+  grid-template-rows:0fr;
+  transition:grid-template-rows .55s var(--ease);
+}
+.login-panel-wrap.show{
+  grid-template-rows:1fr;
+  margin-top:22px;
+}
+
 .login-panel{
   display:flex;
   flex-direction:column;
@@ -300,21 +312,17 @@ body::before{
   backdrop-filter:blur(16px) saturate(160%);
   -webkit-backdrop-filter:blur(16px) saturate(160%);
   opacity:0;
-  max-height:0;
   overflow:hidden;
+  min-height:0;
   transform:translateY(20px);
   transition:
-    opacity .55s var(--ease),
-    transform .55s var(--ease),
-    max-height .55s var(--ease),
-    margin-top .55s var(--ease);
+    opacity .4s var(--ease),
+    transform .4s var(--ease);
 }
 
-.login-panel.show{
+.login-panel-wrap.show .login-panel{
   opacity:1;
-  max-height:640px;
   transform:translateY(0);
-  margin-top:22px;
 }
 
 .hidden{display:none}
@@ -425,6 +433,16 @@ button{
   .profile::before{
     display:none;
   }
+
+  /* These run continuously and cost nothing on their own, but
+     stacked with the tap-driven card/panel transition they were
+     part of what pushed the page into low frame rates. Turn off
+     the two infinite loops, and drop the box-shadow transition
+     (paint-heavy) on hover/active states. */
+  .title{ animation:none; background-position:0% 0; }
+  .orbit-ring{ animation:none; }
+  .profile:hover,
+  .profile.active{ box-shadow:0 12px 30px rgba(0,0,0,.32); }
 }
 
 @media (prefers-reduced-motion: reduce){
