@@ -736,49 +736,25 @@
           Log in to continue tracking who paid, who owes, and what is settled.
         </p>
 
-        <form class="form" id="loginForm" autocomplete="on">
-          <div class="field">
-            <div class="icon">👤</div>
-            <input id="username" name="username" type="text" placeholder=" " autocomplete="username" required />
-            <label for="username">Username or Email</label>
-          </div>
+        
+<div id="profileSelection" class="profiles">
+<button class="profile-card" data-user="Arish"><div class="avatar blue">A</div><div><strong>Arish</strong><small>Tap to continue</small></div></button>
+<button class="profile-card" data-user="Ayman"><div class="avatar green">A</div><div><strong>Ayman</strong><small>Tap to continue</small></div></button>
+<button class="profile-card" data-user="Vishist"><div class="avatar purple">V</div><div><strong>Vishist</strong><small>Tap to continue</small></div></button>
+</div>
 
-          <div class="field">
-            <div class="icon">🔒</div>
-            <input id="password" name="password" type="password" placeholder=" " autocomplete="current-password" required />
-            <label for="password">Password</label>
-            <button class="toggle" type="button" id="togglePw" aria-label="Show password">👁️</button>
-          </div>
+<form class="form hidden" id="loginForm" autocomplete="on">
+<button type="button" id="backBtn" class="secondary-button small">← Change profile</button>
+<h3 id="selectedUserName"></h3>
+<div class="field">
+<div class="icon">🔒</div>
+<input id="password" name="password" type="password" placeholder=" " autocomplete="current-password" required />
+<label for="password">Password</label>
+<button class="toggle" type="button" id="togglePw">👁️</button>
+</div>
+<button class="button" id="loginBtn" type="submit"><span class="spinner"></span><span id="loginBtnText">Enter the dashboard</span></button>
+</form>
 
-          <div class="row">
-            <label class="check">
-              <input id="rememberMe" type="checkbox" checked />
-              Remember me
-            </label>
-            <a class="link" href="#" onclick="event.preventDefault(); alert('Create 3 Firebase Auth users for Arish, Ayman, and Vishist.')">Need setup help?</a>
-          </div>
-
-          <button class="button" id="loginBtn" type="submit">
-            <span class="spinner" aria-hidden="true"></span>
-            <span id="loginBtnText">Enter the dashboard</span>
-          </button>
-        </form>
-
-        <div class="assist">
-          <div class="assist-grid">
-            <button class="preset" type="button" data-user="Arish">
-              <strong>Arish</strong>
-              <span>Quick fill username</span>
-            </button>
-            <button class="preset" type="button" data-user="Ayman">
-              <strong>Ayman</strong>
-              <span>Quick fill username</span>
-            </button>
-            <button class="preset" type="button" data-user="Vishist">
-              <strong>Vishist</strong>
-              <span>Quick fill username</span>
-            </button>
-          </div>
 
           <div class="footer-note">
             Create the Firebase Auth users, then enter the password here. The username buttons map to

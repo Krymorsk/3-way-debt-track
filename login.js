@@ -15,7 +15,6 @@ const USER_MAP = {
 };
 
 const form = document.getElementById("loginForm");
-const usernameEl = document.getElementById("username");
 const passwordEl = document.getElementById("password");
 const togglePw = document.getElementById("togglePw");
 const loginBtn = document.getElementById("loginBtn");
@@ -87,12 +86,22 @@ function spawnPetals() {
   }
 }
 
-document.querySelectorAll(".preset").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    usernameEl.value = btn.dataset.user;
-    usernameEl.focus();
-    toast("Profile selected", `${btn.dataset.user} is ready.`, "success");
-  });
+const profileSelection=document.getElementById("profileSelection");
+const backBtn=document.getElementById("backBtn");
+const selectedUserName=document.getElementById("selectedUserName");
+let selectedUser="";
+document.querySelectorAll(".profile-card").forEach(btn=>{
+ btn.addEventListener("click",()=>{
+   selectedUser=btn.dataset.user;
+   selectedUserName.textContent=btn.dataset.user;
+   profileSelection.classList.add("hidden");
+   form.classList.remove("hidden");
+ });
+});
+backBtn?.addEventListener("click",()=>{
+ form.classList.add("hidden");
+ profileSelection.classList.remove("hidden");
+ passwordEl.value="";
 });
 
 togglePw.addEventListener("click", () => {
@@ -104,11 +113,11 @@ togglePw.addEventListener("click", () => {
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const email = mapUsernameToEmail(usernameEl.value);
+  const email = mapUsernameToEmail(selectedUser);
   const password = passwordEl.value;
 
   if (!email || !password) {
-    toast("Missing details", "Enter a profile or email and password.", "error");
+    toast("Missing details","Select a profile and enter your password.","error");
     return;
   }
 

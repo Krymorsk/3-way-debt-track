@@ -420,3 +420,10 @@ button{cursor:pointer}
 #logoutBtn:hover {
     background: #bb2d3b;
 }
+
+
+.profiles{display:grid;gap:14px}
+.profile-card{display:flex;align-items:center;gap:16px;padding:18px;border-radius:20px;background:var(--surface-3);border:1px solid var(--border);color:var(--text)}
+.profile-card:hover{transform:translateY(-2px);border-color:rgba(110,168,255,.4)}
+.profile-card small{display:block;color:var(--muted)}
+.blue{background:#4f7cff}.green{background:#26b56d}.purple{background:#8458ff}
