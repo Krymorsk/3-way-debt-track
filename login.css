@@ -338,3 +338,24 @@ button{
     }
 
 }
+.selected-user{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+}
+
+.error-message{
+
+    color:#ff6b6b;
+
+    font-size:.9rem;
+
+    text-align:center;
+
+    min-height:20px;
+
+}
