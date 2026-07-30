@@ -1,27 +1,38 @@
-# Splitwise Trio — Expense Tracker
+# Splitwise Trio
 
-## Files
-- `index.html`
-- `style.css`
-- `app.js`
-- `firebase.js`
+A premium, mobile-first shared expense tracker for **Arish**, **Ayman**, and **Vishist**.
 
 ## Setup
-1. Create a Firebase web app.
-2. Paste your config into `firebase.js` by replacing `export const firebaseConfig = null;`
-3. Enable Cloud Firestore.
-4. (Recommended) Allow your GitHub Pages domain in Firestore security rules.
-5. Upload these files to GitHub Pages.
+
+1. Open `firebase.js`
+2. Paste your Firebase Web App config into `firebaseConfig`
+3. Create a Firestore collection named `transactions`
+4. Deploy the folder to GitHub Pages
 
 ## Features
-- Dashboard cards
-- Friend balances
-- Settlement pairs
-- Realtime Firestore sync
-- Offline persistence
-- Add / edit / delete / undo
-- Search, filters, sort
-- JSON export / import
-- Theme switch
-- Chart.js analytics
 
+- Firestore realtime sync
+- Offline cache support when available
+- Add / edit / delete / undo transactions
+- Expense, borrow, and repayment flows
+- Automatic settlement suggestions
+- Filters, search, sort, and analytics charts
+- Export / import JSON backups
+- Dark mode by default
+
+## Firestore document shape
+
+Each transaction document uses:
+
+- amount
+- description
+- paidBy
+- splitBetween
+- transactionType
+- lender
+- borrower
+- notes
+- date
+- time
+- createdAt
+- updatedAt

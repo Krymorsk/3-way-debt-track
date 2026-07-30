@@ -4,227 +4,196 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0b1020" />
-  <title>Splitwise Trio — Shared Expense Tracker</title>
+  <title>Splitwise Trio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js" defer></script>
+  <script type="module" src="./app.js" defer></script>
 </head>
 <body>
   <div class="bg-orb orb-1"></div>
   <div class="bg-orb orb-2"></div>
   <div class="bg-grid"></div>
 
-  <div id="app-shell" class="app-shell">
-    <header class="topbar glass">
-      <div class="brand">
-        <div class="brand-mark">₹</div>
-        <div>
-          <h1>Splitwise Trio</h1>
-          <p>Arish · Ayman · Vishist</p>
-        </div>
+  <div id="toastRoot" class="toast-root" aria-live="polite" aria-atomic="true"></div>
+
+  <header class="topbar glass">
+    <div class="brand">
+      <div class="brand-mark">₹</div>
+      <div>
+        <h1>Splitwise Trio</h1>
+        <p>Arish · Ayman · Vishist</p>
       </div>
+    </div>
 
-      <div class="topbar-actions">
-        <div class="theme-pill">
-          <button class="chip-button active" data-theme="dark" title="Dark mode">Dark</button>
-          <button class="chip-button" data-theme="light" title="Light mode">Light</button>
-        </div>
-        <button id="settingsBtn" class="icon-button" aria-label="Open settings">
-          <span>⚙️</span>
-        </button>
+    <div class="topbar-actions">
+      <div class="segmented">
+        <button class="segmented-btn active" data-theme="dark">Dark</button>
+        <button class="segmented-btn" data-theme="light">Light</button>
       </div>
-    </header>
+      <button id="settingsShortcut" class="icon-button" aria-label="Open settings">⚙</button>
+    </div>
+  </header>
 
-    <main class="main-layout">
-      <aside class="desktop-nav glass">
-        <button class="nav-link active" data-view="dashboard">Dashboard</button>
-        <button class="nav-link" data-view="history">History</button>
-        <button class="nav-link" data-view="analytics">Analytics</button>
-        <button class="nav-link" data-view="settings">Settings</button>
-      </aside>
+  <div class="app-shell">
+    <aside class="desktop-nav glass" aria-label="Primary navigation">
+      <button class="nav-link active" data-view="dashboard">Dashboard</button>
+      <button class="nav-link" data-view="history">History</button>
+      <button class="nav-link" data-view="analytics">Analytics</button>
+      <button class="nav-link" data-view="settings">Settings</button>
+    </aside>
 
-      <section class="content-pane">
-        <section id="dashboardView" class="view active">
-          <div class="hero glass">
-            <div class="hero-copy">
-              <span class="eyebrow">Shared money, zero confusion</span>
-              <h2>Track who paid, who owes, and what is settled.</h2>
-              <p>Premium, mobile-first expense tracking with Firestore sync, automatic settlements, and fast filtering.</p>
-            </div>
-
-            <div class="hero-actions">
-              <button id="quickAddExpense" class="primary-button">Quick Expense</button>
-              <button id="quickAddBorrow" class="secondary-button">Quick Borrow</button>
-            </div>
+    <main class="content">
+      <section id="dashboardView" class="view active">
+        <section class="hero glass">
+          <div class="hero-copy">
+            <span class="eyebrow">Shared money, zero confusion</span>
+            <h2>Track who paid, who owes, and what is settled.</h2>
+            <p>Fast, polished expense tracking for exactly three friends — built for Firestore sync, realtime updates, and a clean mobile-first flow.</p>
+            <div class="hero-chips" id="quickTemplateChips"></div>
           </div>
 
-          <section class="stats-grid" id="statsGrid">
-            <article class="stat-card glass skeleton">
-              <div class="skeleton-line short"></div>
-              <div class="skeleton-line long"></div>
-            </article>
-            <article class="stat-card glass skeleton">
-              <div class="skeleton-line short"></div>
-              <div class="skeleton-line long"></div>
-            </article>
-            <article class="stat-card glass skeleton">
-              <div class="skeleton-line short"></div>
-              <div class="skeleton-line long"></div>
-            </article>
-            <article class="stat-card glass skeleton">
-              <div class="skeleton-line short"></div>
-              <div class="skeleton-line long"></div>
-            </article>
-          </section>
-
-          <section class="section-header">
-            <div>
-              <h3>Friends</h3>
-              <p>Current balance, given, taken, and total activity.</p>
-            </div>
-            <div class="subtle-badge" id="monthlySummaryBadge">Loading summary…</div>
-          </section>
-
-          <section id="friendsGrid" class="friends-grid"></section>
-
-          <section class="section-header">
-            <div>
-              <h3>Settlement engine</h3>
-              <p>Minimal transfer pairs automatically calculated from the current balances.</p>
-            </div>
-          </section>
-          <section id="settlementsSection" class="settlements glass"></section>
-
-          <section class="section-header">
-            <div>
-              <h3>Recent activity</h3>
-              <p>Newest transaction first, with quick actions.</p>
-            </div>
-            <button id="openHistoryBtn" class="text-button">Open full history</button>
-          </section>
-          <section id="recentActivity" class="history-stack"></section>
+          <div class="hero-actions">
+            <button id="quickExpenseBtn" class="primary-button">Quick expense</button>
+            <button id="quickBorrowBtn" class="secondary-button">Quick borrow</button>
+            <button id="quickRepayBtn" class="secondary-button">Quick repayment</button>
+          </div>
         </section>
 
-        <section id="historyView" class="view">
-          <div class="panel glass">
+        <section id="statsGrid" class="stats-grid"></section>
+
+        <div class="section-head">
+          <div>
+            <h3>Friends</h3>
+            <p>Balances, totals, and status at a glance.</p>
+          </div>
+          <div class="subtle-badge" id="summaryBadge">Loading…</div>
+        </div>
+        <section id="friendsGrid" class="friends-grid"></section>
+
+        <div class="section-head">
+          <div>
+            <h3>Settlement engine</h3>
+            <p>Automatic transfer suggestions with minimal pairs.</p>
+          </div>
+        </div>
+        <section id="settlementsSection" class="settlement-panel glass"></section>
+
+        <div class="section-head">
+          <div>
+            <h3>Recent activity</h3>
+            <p>Newest transactions first.</p>
+          </div>
+          <button class="text-button" id="openHistoryBtn">Open full history</button>
+        </div>
+        <section id="recentActivity" class="history-stack"></section>
+      </section>
+
+      <section id="historyView" class="view">
+        <section class="panel glass">
+          <div class="panel-top">
+            <div>
+              <h3>Transaction history</h3>
+              <p>Search, filter, sort, edit, delete, and undo.</p>
+            </div>
+            <button id="clearFiltersBtn" class="secondary-button small">Clear filters</button>
+          </div>
+
+          <div class="filters-grid">
+            <label class="field">
+              <span>Search</span>
+              <input id="searchInput" type="search" placeholder="Description, note, amount" />
+            </label>
+            <label class="field">
+              <span>Person</span>
+              <select id="personFilter">
+                <option value="all">All people</option>
+                <option value="Arish">Arish</option>
+                <option value="Ayman">Ayman</option>
+                <option value="Vishist">Vishist</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Type</span>
+              <select id="typeFilter">
+                <option value="all">All types</option>
+                <option value="expense">Expense</option>
+                <option value="borrow">Borrow</option>
+                <option value="repayment">Repayment</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Date</span>
+              <input id="dateFilter" type="date" />
+            </label>
+            <label class="field">
+              <span>Month</span>
+              <input id="monthFilter" type="month" />
+            </label>
+            <label class="field">
+              <span>Sort</span>
+              <select id="sortFilter">
+                <option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
+                <option value="highest">Highest amount</option>
+                <option value="lowest">Lowest amount</option>
+              </select>
+            </label>
+          </div>
+        </section>
+
+        <section id="historyList" class="history-list"></section>
+      </section>
+
+      <section id="analyticsView" class="view">
+        <section class="panel glass">
+          <div class="panel-top">
+            <div>
+              <h3>Analytics</h3>
+              <p>Realtime charts built with Chart.js.</p>
+            </div>
+          </div>
+          <div class="charts-grid">
+            <article class="chart-card glass"><h4>Monthly spending</h4><canvas id="monthlyChart"></canvas></article>
+            <article class="chart-card glass"><h4>Expenses by friend</h4><canvas id="expenseChart"></canvas></article>
+            <article class="chart-card glass"><h4>Money given vs taken</h4><canvas id="flowChart"></canvas></article>
+            <article class="chart-card glass"><h4>Transaction count</h4><canvas id="countChart"></canvas></article>
+          </div>
+        </section>
+      </section>
+
+      <section id="settingsView" class="view">
+        <section class="settings-grid">
+          <article class="panel glass">
             <div class="panel-top">
               <div>
-                <h3>Transaction history</h3>
-                <p>Search, filter, sort, edit, delete, and undo.</p>
-              </div>
-              <div class="panel-actions">
-                <button id="clearFiltersBtn" class="secondary-button small">Clear filters</button>
+                <h3>Settings</h3>
+                <p>Theme, backup, and data tools.</p>
               </div>
             </div>
 
-            <div class="filters-grid">
-              <label class="field">
-                <span>Search</span>
-                <input id="searchInput" type="search" placeholder="Search description or note" />
-              </label>
-
-              <label class="field">
-                <span>Person</span>
-                <select id="personFilter">
-                  <option value="all">All people</option>
-                  <option value="Arish">Arish</option>
-                  <option value="Ayman">Ayman</option>
-                  <option value="Vishist">Vishist</option>
-                </select>
-              </label>
-
-              <label class="field">
-                <span>Type</span>
-                <select id="typeFilter">
-                  <option value="all">All types</option>
-                  <option value="expense">Expense</option>
-                  <option value="borrow">Borrow</option>
-                  <option value="repayment">Repayment</option>
-                </select>
-              </label>
-
-              <label class="field">
-                <span>Date</span>
-                <input id="dateFilter" type="date" />
-              </label>
-
-              <label class="field">
-                <span>Month</span>
-                <input id="monthFilter" type="month" />
-              </label>
-
-              <label class="field">
-                <span>Sort</span>
-                <select id="sortFilter">
-                  <option value="newest">Newest</option>
-                  <option value="oldest">Oldest</option>
-                  <option value="highest">Highest amount</option>
-                  <option value="lowest">Lowest amount</option>
-                </select>
-              </label>
+            <div class="settings-list">
+              <button id="exportJsonBtn" class="setting-row">Export JSON</button>
+              <button id="importJsonBtn" class="setting-row">Import JSON</button>
+              <button id="resetBalancesBtn" class="setting-row">Reset balances</button>
+              <button id="clearAllBtn" class="setting-row danger">Clear all transactions</button>
             </div>
-          </div>
+          </article>
 
-          <section id="historyList" class="history-list"></section>
-        </section>
-
-        <section id="analyticsView" class="view">
-          <div class="panel glass">
-            <div class="panel-top">
-              <div>
-                <h3>Analytics</h3>
-                <p>Charts update in real time from your transaction data.</p>
-              </div>
+          <article class="panel glass">
+            <h3>About app</h3>
+            <p class="muted">Built for exactly three friends with Firestore sync, offline cache support, animated counters, and mobile-first UX.</p>
+            <div class="about-grid">
+              <div class="about-chip">Firestore realtime</div>
+              <div class="about-chip">GitHub Pages ready</div>
+              <div class="about-chip">Offline cache</div>
+              <div class="about-chip">Undo delete</div>
+              <div class="about-chip">Bottom nav</div>
+              <div class="about-chip">Fast filters</div>
             </div>
-            <div class="charts-grid">
-              <article class="chart-card glass"><h4>Monthly spending</h4><canvas id="monthlyChart"></canvas></article>
-              <article class="chart-card glass"><h4>Expenses by friend</h4><canvas id="expenseChart"></canvas></article>
-              <article class="chart-card glass"><h4>Money given vs taken</h4><canvas id="flowChart"></canvas></article>
-              <article class="chart-card glass"><h4>Transaction counts</h4><canvas id="countChart"></canvas></article>
-            </div>
-          </div>
-        </section>
-
-        <section id="settingsView" class="view">
-          <div class="settings-grid">
-            <section class="panel glass">
-              <div class="panel-top">
-                <div>
-                  <h3>Settings</h3>
-                  <p>Manage data, backups, and theme.</p>
-                </div>
-              </div>
-
-              <div class="settings-list">
-                <button id="exportJsonBtn" class="setting-row">Export JSON</button>
-                <button id="importJsonBtn" class="setting-row">Import JSON</button>
-                <button id="resetBalancesBtn" class="setting-row">Reset balances</button>
-                <button id="clearAllBtn" class="setting-row danger">Clear all transactions</button>
-              </div>
-            </section>
-
-            <section class="panel glass">
-              <h3>About app</h3>
-              <p class="muted">
-                Built for exactly three friends with Firestore sync, offline cache support, animated stats, and mobile-first UX.
-              </p>
-
-              <div class="about-grid">
-                <div class="about-chip">Spark Plan friendly</div>
-                <div class="about-chip">GitHub Pages ready</div>
-                <div class="about-chip">Realtime listeners</div>
-                <div class="about-chip">Undo delete</div>
-                <div class="about-chip">Bottom nav on mobile</div>
-                <div class="about-chip">Favorite descriptions</div>
-              </div>
-
-              <div class="favorites-panel">
-                <h4>Favorite descriptions</h4>
-                <div id="favoritesChips" class="chip-row"></div>
-              </div>
-            </section>
-          </div>
+          </article>
         </section>
       </section>
     </main>
@@ -232,112 +201,81 @@
 
   <button id="fab" class="fab" aria-label="Add transaction">＋</button>
 
-  <nav class="bottom-nav glass" aria-label="Mobile navigation">
-    <button class="nav-link active" data-view="dashboard">Dashboard</button>
-    <button class="nav-link" data-view="history">History</button>
-    <button class="nav-link add-action" id="mobileAddBtn">＋</button>
-    <button class="nav-link" data-view="analytics">Analytics</button>
-    <button class="nav-link" data-view="settings">Settings</button>
+  <nav class="mobile-nav glass" aria-label="Mobile navigation">
+    <button class="mobile-nav-btn active" data-view="dashboard">Dashboard</button>
+    <button class="mobile-nav-btn" data-view="history">History</button>
+    <button id="mobileAddBtn" class="mobile-nav-add">＋</button>
+    <button class="mobile-nav-btn" data-view="analytics">Analytics</button>
+    <button class="mobile-nav-btn" data-view="settings">Settings</button>
   </nav>
-
-  <div id="modalOverlay" class="modal-overlay hidden" aria-hidden="true">
-    <div class="modal glass" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <div class="modal-header">
-        <div>
-          <span class="eyebrow" id="modalEyebrow">Add transaction</span>
-          <h3 id="modalTitle">Record a new transaction</h3>
-        </div>
-        <button id="closeModalBtn" class="icon-button" aria-label="Close modal">✕</button>
-      </div>
-
-      <form id="transactionForm" class="form-grid">
-        <input type="hidden" id="transactionId" />
-        <div class="field">
-          <span>Amount</span>
-          <input id="amountInput" type="number" min="1" step="1" placeholder="0" required />
-        </div>
-
-        <div class="field">
-          <span>Description</span>
-          <input id="descriptionInput" type="text" maxlength="120" placeholder="Lunch, cab, rent…" required />
-        </div>
-
-        <div class="field">
-          <span>Paid by</span>
-          <select id="paidByInput" required></select>
-        </div>
-
-        <div class="field">
-          <span>Transaction type</span>
-          <select id="typeInput" required>
-            <option value="expense">Expense</option>
-            <option value="borrow">Borrow</option>
-            <option value="repayment">Repayment</option>
-          </select>
-        </div>
-
-        <div class="field full" id="splitField">
-          <span>Split between</span>
-          <div id="splitCheckGroup" class="check-grid"></div>
-        </div>
-
-        <div class="field full hidden" id="debtField">
-          <div class="debt-grid">
-            <label class="field">
-              <span>Lender</span>
-              <select id="lenderInput"></select>
-            </label>
-            <label class="field">
-              <span>Borrower</span>
-              <select id="borrowerInput"></select>
-            </label>
-          </div>
-        </div>
-
-        <div class="field full">
-          <span>Optional notes</span>
-          <textarea id="notesInput" rows="3" placeholder="Anything important about this transaction?"></textarea>
-        </div>
-
-        <div class="field">
-          <span>Date</span>
-          <input id="dateInput" type="date" required />
-        </div>
-
-        <div class="field">
-          <span>Time</span>
-          <input id="timeInput" type="time" required />
-        </div>
-
-        <div class="form-actions full">
-          <button type="button" id="cancelBtn" class="secondary-button">Cancel</button>
-          <button type="submit" class="primary-button" id="saveBtn">Save transaction</button>
-        </div>
-      </form>
-
-      <div class="favorites-panel">
-        <h4>Quick add templates</h4>
-        <div id="quickTemplateChips" class="chip-row"></div>
-      </div>
-    </div>
-  </div>
-
-  <div id="toastRoot" class="toast-root"></div>
-
-  <div id="confirmDialog" class="confirm-overlay hidden" aria-hidden="true">
-    <div class="confirm-card glass">
-      <h3 id="confirmTitle">Confirm action</h3>
-      <p id="confirmMessage">Are you sure?</p>
-      <div class="confirm-actions">
-        <button id="confirmCancelBtn" class="secondary-button">Cancel</button>
-        <button id="confirmOkBtn" class="primary-button danger-btn">Confirm</button>
-      </div>
-    </div>
-  </div>
 
   <input id="importFileInput" type="file" accept="application/json" hidden />
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script type="module" src="./app.js"></script>
+  <div id="modalOverlay" class="modal-overlay hidden" aria-hidden="true">
+    <div class="modal glass" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-head">
+        <div>
+          <span id="modalEyebrow" class="eyebrow">Add transaction</span>
+          <h3 id="modalTitle">Record a new transaction</h3>
+        </div>
+        <button id="closeModalBtn" class="icon-button" aria-label="Close">✕</button>
+      </div>
+
+      <form id="transactionForm" class="modal-form">
+        <input id="transactionId" type="hidden" />
+        <div class="grid-2">
+          <label class="field"><span>Amount</span><input id="amountInput" type="number" min="0.01" step="0.01" placeholder="0" required /></label>
+          <label class="field"><span>Description</span><input id="descriptionInput" type="text" maxlength="80" placeholder="Pizza, cab, groceries…" required /></label>
+        </div>
+
+        <div class="grid-2">
+          <label class="field"><span>Paid by</span><select id="paidByInput"></select></label>
+          <label class="field"><span>Transaction type</span>
+            <select id="typeInput">
+              <option value="expense">Expense</option>
+              <option value="borrow">Borrow</option>
+              <option value="repayment">Repayment</option>
+            </select>
+          </label>
+        </div>
+
+        <div id="splitField" class="field-block">
+          <div class="field-head">
+            <span>Split between</span>
+            <button type="button" id="selectAllSplitBtn" class="text-button tiny">Select all</button>
+          </div>
+          <div id="splitCheckGroup" class="check-grid"></div>
+        </div>
+
+        <div id="debtField" class="grid-2 hidden">
+          <label class="field"><span>Lender</span><select id="lenderInput"></select></label>
+          <label class="field"><span>Borrower</span><select id="borrowerInput"></select></label>
+        </div>
+
+        <label class="field"><span>Optional notes</span><textarea id="notesInput" rows="3" placeholder="Anything worth remembering?"></textarea></label>
+
+        <div class="grid-2">
+          <label class="field"><span>Date</span><input id="dateInput" type="date" required /></label>
+          <label class="field"><span>Time</span><input id="timeInput" type="time" required /></label>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" id="cancelBtn" class="secondary-button">Cancel</button>
+          <button type="submit" id="saveBtn" class="primary-button">Save transaction</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="confirmDialog" class="confirm-overlay hidden" aria-hidden="true">
+    <div class="confirm-card glass" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+      <h3 id="confirmTitle">Confirm</h3>
+      <p id="confirmMessage" class="muted"></p>
+      <div class="confirm-actions">
+        <button id="confirmCancelBtn" class="secondary-button">Cancel</button>
+        <button id="confirmOkBtn" class="primary-button">Confirm</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
