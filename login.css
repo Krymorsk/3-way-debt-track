@@ -1,0 +1,340 @@
+/* ==========================
+   Splitwise Trio Login
+========================== */
+
+:root{
+    --bg:#0b1020;
+    --card:#171d35;
+    --card-hover:#20284a;
+
+    --primary:#5f8fff;
+    --secondary:#7c5cff;
+
+    --text:#ffffff;
+    --muted:#9aa8c9;
+
+    --border:#2b3760;
+
+    --radius:22px;
+    --transition:.25s ease;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Inter,system-ui,sans-serif;
+    background:
+        radial-gradient(circle at top left,#1b2b60 0%,transparent 35%),
+        radial-gradient(circle at bottom right,#482a78 0%,transparent 30%),
+        var(--bg);
+
+    color:var(--text);
+
+    min-height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:24px;
+}
+
+/* ================= */
+
+.container{
+
+    width:100%;
+    max-width:430px;
+
+}
+
+/* ================= */
+
+.title{
+
+    text-align:center;
+    margin-bottom:8px;
+
+    font-size:2.4rem;
+    font-weight:800;
+
+}
+
+.subtitle{
+
+    text-align:center;
+
+    color:var(--muted);
+
+    margin-bottom:32px;
+
+}
+
+/* ================= */
+
+.profiles{
+
+    display:grid;
+
+    gap:18px;
+
+}
+
+/* ================= */
+
+.profile{
+
+    background:var(--card);
+
+    border:1px solid var(--border);
+
+    border-radius:var(--radius);
+
+    padding:22px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    cursor:pointer;
+
+    transition:var(--transition);
+
+}
+
+.profile:hover{
+
+    transform:translateY(-3px);
+
+    background:var(--card-hover);
+
+    border-color:var(--primary);
+
+}
+
+.profile.selected{
+
+    border-color:var(--primary);
+
+    box-shadow:0 0 20px rgba(95,143,255,.25);
+
+}
+
+/* ================= */
+
+.avatar{
+
+    width:70px;
+    height:70px;
+
+    border-radius:50%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    color:white;
+
+    font-size:26px;
+    font-weight:bold;
+
+    flex-shrink:0;
+
+}
+
+.arish{
+
+    background:#4f7cff;
+
+}
+
+.ayman{
+
+    background:#2fb86d;
+
+}
+
+.vishist{
+
+    background:#8b5cf6;
+
+}
+
+/* ================= */
+
+.profile-info{
+
+    flex:1;
+
+}
+
+.profile-name{
+
+    font-size:1.2rem;
+
+    font-weight:700;
+
+}
+
+.profile-desc{
+
+    color:var(--muted);
+
+    margin-top:4px;
+
+}
+
+/* ================= */
+
+.login-panel{
+
+    margin-top:20px;
+
+    background:var(--card);
+
+    border:1px solid var(--border);
+
+    border-radius:var(--radius);
+
+    padding:24px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+    animation:fade .25s;
+
+}
+
+.hidden{
+
+    display:none;
+
+}
+
+/* ================= */
+
+input{
+
+    width:100%;
+
+    padding:16px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:#0f1529;
+
+    color:white;
+
+    font-size:16px;
+
+    outline:none;
+
+}
+
+input:focus{
+
+    border:1px solid var(--primary);
+
+}
+
+/* ================= */
+
+button{
+
+    border:none;
+
+    border-radius:14px;
+
+    padding:16px;
+
+    cursor:pointer;
+
+    font-weight:700;
+
+    transition:.2s;
+
+}
+
+.login-btn{
+
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--secondary)
+    );
+
+    color:white;
+
+}
+
+.login-btn:hover{
+
+    transform:translateY(-2px);
+
+}
+
+.back-btn{
+
+    background:#2b355e;
+
+    color:white;
+
+}
+
+/* ================= */
+
+@keyframes fade{
+
+    from{
+
+        opacity:0;
+        transform:translateY(10px);
+
+    }
+
+    to{
+
+        opacity:1;
+        transform:none;
+
+    }
+
+}
+
+/* ================= */
+
+@media(max-width:500px){
+
+    .profile{
+
+        padding:18px;
+
+    }
+
+    .avatar{
+
+        width:60px;
+        height:60px;
+
+        font-size:22px;
+
+    }
+
+    .title{
+
+        font-size:2rem;
+
+    }
+
+}
