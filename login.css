@@ -283,3 +283,45 @@ body{padding:20px}
 .profile{padding:16px}
 .avatar{width:54px;height:54px}
 }
+
+/* Mobile perf: backdrop-filter blur + large animated blur blobs together
+   are extremely GPU-heavy and cause jank on mid/low-end phones. */
+@media(max-width:768px){
+
+body::before,
+body::after{
+    animation:none;
+    width:280px;
+    height:280px;
+    filter:blur(40px);
+}
+
+.profile{
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
+    background:rgba(23,30,58,.86);
+}
+
+.profile::before{
+    display:none;
+}
+
+.title{
+    animation:none;
+    background-position:0 0;
+}
+
+}
+
+@media (prefers-reduced-motion: reduce){
+
+*,
+*::before,
+*::after{
+    animation-duration:.001ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001ms !important;
+    scroll-behavior:auto !important;
+}
+
+}
