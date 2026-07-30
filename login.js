@@ -10,9 +10,9 @@ import {
 import { firebaseConfig } from "./firebase.js";
 
 const USER_MAP = {
-    arish: "arish@splitwise.local",
-    ayman: "ayman@splitwise.local",
-    vishist: "vishist@splitwise.local"
+    arish: "arish.owais@gmail.com",
+    ayman: "mohdayman000@gmail.com",
+    vishist: "vishuthehero11@gmail.com"
 };
 
 let auth = null;
