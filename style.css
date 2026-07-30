@@ -404,3 +404,19 @@ button{cursor:pointer}
   .fab{right:16px;bottom:90px;width:60px;height:60px}
   .mobile-nav{display:grid}
 }
+#logoutBtn {
+    width: 100%;
+    margin-top: 16px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+}
+
+#logoutBtn:hover {
+    background: #bb2d3b;
+}
