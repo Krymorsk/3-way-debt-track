@@ -1,10 +1,27 @@
+// Import Firebase SDK
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import {
+  getFirestore,
+  enableIndexedDbPersistence
+} from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+
+// Your Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBOfF5lBj2S9l3AlHmvpx9Ui3oueU9CimQ",
-  authDomain: "way-debt-track.firebaseapp.com",
-  projectId: "way-debt-track",
-  storageBucket: "way-debt-track.firebasestorage.app",
-  messagingSenderId: "791614563252",
-  appId: "1:791614563252:web:a1229160e76018970c08e1"
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT",
+  storageBucket: "YOUR_PROJECT.firebasestorage.app",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
 };
 
-export const firebaseConfig = null;
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+// Initialize Firestore
+const db = getFirestore(app);
+
+// Enable offline persistence (optional)
+enableIndexedDbPersistence(db).catch(() => {});
+
+export { db };
