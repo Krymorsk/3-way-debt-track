@@ -1,12 +1,8 @@
-// Paste Firebase Config Here
-// Example:
-// export const firebaseConfig = {
-//   apiKey: "YOUR_API_KEY",
-//   authDomain: "YOUR_PROJECT.firebaseapp.com",
-//   projectId: "YOUR_PROJECT_ID",
-//   storageBucket: "YOUR_PROJECT.appspot.com",
-//   messagingSenderId: "YOUR_SENDER_ID",
-//   appId: "YOUR_APP_ID"
-// };
-
-export const firebaseConfig = null;
+export const firebaseConfig = {
+  apiKey: "AIzaSyBOfF5lBj2S9l3AlHmvpx9Ui3oueU9CimQ",
+  authDomain: "way-debt-track.firebaseapp.com",
+  projectId: "way-debt-track",
+  storageBucket: "way-debt-track.firebasestorage.app",
+  messagingSenderId: "791614563252",
+  appId: "1:791614563252:web:a1229160e76018970c08e1"
+};
