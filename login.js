@@ -123,7 +123,7 @@ form.addEventListener("submit", async (e) => {
     await signInWithEmailAndPassword(auth, email, password);
     toast("Success", "Redirecting...", "success");
     setTimeout(() => {
-      window.location.href = "./index.html";
+      window.location.href = "./dashboard.html";
     }, 700);
   } catch (err) {
     console.error(err);
@@ -169,7 +169,7 @@ if (isRealConfig(firebaseConfig)) {
     if (user) {
       toast("Welcome back", "Redirecting to the dashboard...", "success");
       setTimeout(() => {
-        window.location.href = "./index.html";
+        window.location.href = "./dashboard.html";
       }, 500);
     }
   });
