@@ -13,12 +13,24 @@
   <script type="module" src="./app.js" defer></script>
   <style>
     body.auth-pending > *:not(#authGate) { display: none !important; }
+    #authGate{
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #8aa0c8;
+      font-family: Inter, system-ui, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(110,168,255,.22), transparent 34%),
+        radial-gradient(circle at top right, rgba(124,92,255,.18), transparent 28%),
+        linear-gradient(180deg, #0d1328, #090d1a);
+    }
   </style>
 </head>
 <body class="auth-pending">
-  <div id="authGate" style="display:flex;min-height:100vh;align-items:center;justify-content:center;color:#8aa0c8;font-family:Inter,system-ui,sans-serif;">
-    Checking session…
-  </div>
+  <div id="authGate">Checking session…</div>
   <div class="bg-orb orb-1"></div>
   <div class="bg-orb orb-2"></div>
   <div class="bg-grid"></div>

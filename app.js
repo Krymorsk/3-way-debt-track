@@ -1320,6 +1320,7 @@ function init() {
 
 if (currentUser) {
   document.body.classList.remove('auth-pending');
+  document.getElementById('authGate')?.remove();
   init();
 }
 // else: requireAuth() has already redirected to the login page
