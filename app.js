@@ -95,6 +95,8 @@ const els = {
   amountInput: document.getElementById('amountInput'),
   descriptionInput: document.getElementById('descriptionInput'),
   paidByInput: document.getElementById('paidByInput'),
+  paidByField: document.getElementById('paidByField'),
+  typeRow: document.getElementById('typeRow'),
   typeInput: document.getElementById('typeInput'),
   splitField: document.getElementById('splitField'),
   splitCheckGroup: document.getElementById('splitCheckGroup'),
@@ -318,6 +320,8 @@ function toggleDebtFields() {
   const isDebt = type === 'borrow' || type === 'repayment';
   els.splitField.classList.toggle('hidden', isDebt);
   els.debtField.classList.toggle('hidden', !isDebt);
+  els.paidByField.classList.toggle('hidden', isDebt);
+  els.typeRow.classList.toggle('single-col', isDebt);
 }
 
 function openModal(mode = 'create', preset = {}) {
@@ -386,12 +390,12 @@ function isRapidDuplicate(payload) {
 function validateTransaction(tx) {
   if (!Number.isFinite(tx.amount) || tx.amount <= 0) return 'Amount must be greater than zero.';
   if (!tx.description.trim()) return 'Description is required.';
-  if (!PEOPLE.includes(tx.paidBy)) return 'Choose a valid paid-by person.';
   if (!['expense', 'borrow', 'repayment'].includes(tx.transactionType)) return 'Choose a valid transaction type.';
   if (!/^\d{4}-\d{2}-\d{2}$/.test(tx.date)) return 'Date is invalid.';
   if (!/^\d{2}:\d{2}$/.test(tx.time)) return 'Time is invalid.';
 
   if (tx.transactionType === 'expense') {
+    if (!PEOPLE.includes(tx.paidBy)) return 'Choose a valid paid-by person.';
     if (!Array.isArray(tx.splitBetween) || tx.splitBetween.length === 0) return 'Pick at least one split participant.';
     if (tx.splitBetween.some(name => !PEOPLE.includes(name))) return 'Split list contains an invalid name.';
   }
@@ -408,13 +412,14 @@ function validateTransaction(tx) {
    Firestore / local data layer
 ========================================================= */
 function normalizeTx(tx) {
+  const transactionType = tx.transactionType || 'expense';
   return {
     id: tx.id || uid(),
     amount: Number(tx.amount) || 0,
     description: String(tx.description || '').trim(),
-    paidBy: tx.paidBy || PEOPLE[0],
+    paidBy: transactionType === 'expense' ? (tx.paidBy || PEOPLE[0]) : '',
     splitBetween: Array.isArray(tx.splitBetween) ? tx.splitBetween.filter(name => PEOPLE.includes(name)) : [],
-    transactionType: tx.transactionType || 'expense',
+    transactionType,
     lender: tx.lender || '',
     borrower: tx.borrower || '',
     notes: String(tx.notes || '').trim(),
@@ -572,12 +577,12 @@ function computeSummary(transactions) {
       const share = round(amount / split.length);
       result[tx.paidBy].given += amount;
       result[tx.paidBy].balance += amount;
-      result[tx.paidBy].count += 1;
       split.forEach(name => {
         result[name].taken += share;
         result[name].balance -= share;
-        result[name].count += 1;
       });
+      const involved = new Set([tx.paidBy, ...split]);
+      involved.forEach(name => { result[name].count += 1; });
     } else if (tx.transactionType === 'borrow') {
       result[tx.lender].given += amount;
       result[tx.lender].balance += amount;
@@ -587,10 +592,10 @@ function computeSummary(transactions) {
       result[tx.borrower].count += 1;
     } else if (tx.transactionType === 'repayment') {
       result[tx.borrower].given += amount;
-      result[tx.borrower].balance -= amount;
+      result[tx.borrower].balance += amount;
       result[tx.borrower].count += 1;
       result[tx.lender].taken += amount;
-      result[tx.lender].balance += amount;
+      result[tx.lender].balance -= amount;
       result[tx.lender].count += 1;
     }
   }
@@ -824,6 +829,12 @@ function splitSummary(tx) {
   return `Lender: ${tx.lender}. Borrower: ${tx.borrower}.`;
 }
 
+function txMetaLabel(tx) {
+  if (tx.transactionType === 'borrow') return `${tx.lender} lent ${tx.borrower}`;
+  if (tx.transactionType === 'repayment') return `${tx.borrower} repaid ${tx.lender}`;
+  return `Paid by ${tx.paidBy}`;
+}
+
 function renderTransactionCard(tx, { compact = false } = {}) {
   const tagClass = `type-${tx.transactionType}`;
   const details = compact ? '' : `
@@ -841,7 +852,7 @@ function renderTransactionCard(tx, { compact = false } = {}) {
           <div class="tx-icon">${txIcon(tx.transactionType)}</div>
           <div>
             <div class="tx-name">${escapeHtml(tx.description)}</div>
-            <div class="tx-meta">Paid by ${escapeHtml(tx.paidBy)} · ${escapeHtml(formatDateTime(tx))}</div>
+            <div class="tx-meta">${escapeHtml(txMetaLabel(tx))} · ${escapeHtml(formatDateTime(tx))}</div>
           </div>
         </div>
         <div class="tx-amount">${money(tx.amount)}</div>
@@ -1075,7 +1086,11 @@ async function handleImportFile(event) {
     const parsed = JSON.parse(text);
     const incoming = Array.isArray(parsed) ? parsed : Array.isArray(parsed.transactions) ? parsed.transactions : [];
     if (!incoming.length) throw new Error('No transactions found in the file.');
-    const normalized = incoming.map(normalizeTx).filter(tx => PEOPLE.includes(tx.paidBy) && tx.amount > 0);
+    const normalized = incoming.map(normalizeTx).filter(tx => {
+      if (tx.amount <= 0) return false;
+      if (tx.transactionType === 'expense') return PEOPLE.includes(tx.paidBy);
+      return PEOPLE.includes(tx.lender) && PEOPLE.includes(tx.borrower);
+    });
 
     if (!state.backendReady) {
       state.transactions = normalized;
@@ -1198,7 +1213,7 @@ logoutBtn?.addEventListener("click", async () => {
       id: els.transactionId.value || uid(),
       amount: Number(els.amountInput.value),
       description: els.descriptionInput.value.trim(),
-      paidBy: els.paidByInput.value,
+      paidBy: els.typeInput.value === 'expense' ? els.paidByInput.value : '',
       splitBetween: els.typeInput.value === 'expense' ? getSplitBetween() : [],
       transactionType: els.typeInput.value,
       lender: els.typeInput.value === 'expense' ? '' : els.lenderInput.value,

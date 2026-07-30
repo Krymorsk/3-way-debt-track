@@ -15,6 +15,12 @@ const USER_MAP = {
     vishist: "vishuthehero11@gmail.com"
 };
 
+const AVATAR_INITIALS = {
+    arish: "AR",
+    ayman: "AY",
+    vishist: "VI"
+};
+
 let auth = null;
 
 // --------------------
@@ -79,7 +85,7 @@ cards.forEach(card => {
             selectedUser.slice(1);
 
         selectedAvatar.textContent =
-            selectedUser.charAt(0).toUpperCase();
+            AVATAR_INITIALS[selectedUser] || selectedUser.charAt(0).toUpperCase();
 
         selectedAvatar.className =
             `avatar ${selectedUser}`;

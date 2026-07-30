@@ -7,6 +7,10 @@
 
     <title>Splitwise Trio</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="login.css">
 </head>
 
@@ -14,13 +18,32 @@
 
     <main class="container">
 
-        <h1 class="title">
-            Splitwise Trio
-        </h1>
+        <div class="brand">
 
-        <p class="subtitle">
-            Choose your profile
-        </p>
+            <div class="orbit" aria-hidden="true">
+                <span class="orbit-center">₹</span>
+                <span class="orbit-ring">
+                    <span class="orbit-dot dot-arish"></span>
+                    <span class="orbit-dot dot-ayman"></span>
+                    <span class="orbit-dot dot-vishist"></span>
+                </span>
+            </div>
+
+            <p class="kicker">Shared money, three people</p>
+
+            <h1 class="title">
+                Splitwise Trio
+            </h1>
+
+            <p class="subtitle">
+                Pick your name to sign in
+            </p>
+
+            <p class="tagline">
+                Just the three of you — no one else gets in.
+            </p>
+
+        </div>
 
         <!-- ========================= -->
         <!-- Profile Cards -->
@@ -31,7 +54,7 @@
             <div class="profile" data-user="arish">
 
                 <div class="avatar arish">
-                    A
+                    AR
                 </div>
 
                 <div class="profile-info">
@@ -41,7 +64,7 @@
                     </div>
 
                     <div class="profile-desc">
-                        Tap to continue
+                        Tap to sign in
                     </div>
 
                 </div>
@@ -51,7 +74,7 @@
             <div class="profile" data-user="ayman">
 
                 <div class="avatar ayman">
-                    A
+                    AY
                 </div>
 
                 <div class="profile-info">
@@ -61,7 +84,7 @@
                     </div>
 
                     <div class="profile-desc">
-                        Tap to continue
+                        Tap to sign in
                     </div>
 
                 </div>
@@ -71,7 +94,7 @@
             <div class="profile" data-user="vishist">
 
                 <div class="avatar vishist">
-                    V
+                    VI
                 </div>
 
                 <div class="profile-info">
@@ -81,7 +104,7 @@
                     </div>
 
                     <div class="profile-desc">
-                        Tap to continue
+                        Tap to sign in
                     </div>
 
                 </div>
@@ -100,7 +123,7 @@
                 class="back-btn"
                 id="backBtn">
 
-                ← Change Profile
+                ← Change profile
 
             </button>
 
@@ -110,7 +133,7 @@
                     class="avatar"
                     id="selectedAvatar">
 
-                    A
+                    AR
 
                 </div>
 
