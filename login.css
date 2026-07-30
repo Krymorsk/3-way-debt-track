@@ -1,16 +1,15 @@
 /*
-  Splitwise Trio — Login
-  Design tokens: dark navy ground, three accent colors mapped to the
-  three real people, Space Grotesk for display / Inter for body.
+  Splitwise Trio — Login (elevated)
+  Same tokens + class API as before so login.js needs zero changes.
 */
 :root {
-  --bg-0: #05070f;
-  --bg-1: #0b1226;
+  --bg-0: #03050c;
+  --bg-1: #0a1022;
   --ink: #f4f7ff;
   --muted: #8fa0c7;
   --muted-2: #5b6d97;
   --line: rgba(255, 255, 255, 0.09);
-  --line-strong: rgba(255, 255, 255, 0.16);
+  --line-strong: rgba(255, 255, 255, 0.18);
 
   --blue: #6f93ff;
   --blue-deep: #3f5fe0;
@@ -28,16 +27,8 @@
   --ease: cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html,
-body {
-  height: 100%;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
 
 body {
   font-family: var(--font-body);
@@ -50,53 +41,61 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   background:
-    radial-gradient(circle at 18% 10%, rgba(111, 147, 255, 0.16), transparent 40%),
-    radial-gradient(circle at 88% 84%, rgba(155, 107, 255, 0.14), transparent 38%),
-    radial-gradient(circle at 90% 6%, rgba(62, 207, 142, 0.07), transparent 30%),
-    linear-gradient(165deg, var(--bg-0), var(--bg-1) 60%, var(--bg-0));
+    radial-gradient(ellipse 90% 70% at 50% -20%, rgba(111, 147, 255, 0.22), transparent 55%),
+    radial-gradient(circle at 92% 88%, rgba(155, 107, 255, 0.16), transparent 42%),
+    radial-gradient(circle at 6% 78%, rgba(62, 207, 142, 0.1), transparent 38%),
+    linear-gradient(165deg, var(--bg-0), var(--bg-1) 55%, #060914);
 }
 
-/* Static, cheap texture — no blur/animation, safe on any device */
+/* Grid texture */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -1;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-  background-size: 64px 64px;
-  mask-image: radial-gradient(circle at 50% 28%, rgba(0, 0, 0, 0.6), transparent 72%);
-  opacity: 0.55;
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 75% 60% at 50% 30%, rgba(0, 0, 0, 0.7), transparent 75%);
+  opacity: 0.7;
+}
+
+/* Soft floating orbs for depth */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle 180px at 15% 40%, rgba(111, 147, 255, 0.08), transparent),
+    radial-gradient(circle 220px at 85% 55%, rgba(155, 107, 255, 0.07), transparent);
 }
 
 .container {
   width: min(470px, 100%);
+  position: relative;
+  z-index: 1;
 }
 
 /* --------------------
    Brand header
 -------------------- */
 .brand {
-  animation: brand-in 0.6s var(--ease) both;
+  animation: brand-in 0.65s var(--ease) both;
 }
 
 @keyframes brand-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .orbit {
   position: relative;
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 18px;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 20px;
 }
 
 .orbit-center {
@@ -107,98 +106,87 @@ body::before {
   border-radius: 50%;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   color: var(--ink);
-  background: linear-gradient(135deg, rgba(111, 147, 255, 0.2), rgba(155, 107, 255, 0.16));
-  border: 1px solid var(--line);
+  background:
+    linear-gradient(145deg, rgba(111, 147, 255, 0.25), rgba(155, 107, 255, 0.18));
+  border: 1px solid rgba(255, 255, 255, 0.14);
   box-shadow:
-    0 0 0 6px rgba(111, 147, 255, 0.06),
-    0 8px 24px rgba(0, 0, 0, 0.35);
+    0 0 0 8px rgba(111, 147, 255, 0.07),
+    0 0 40px rgba(111, 147, 255, 0.2),
+    0 10px 28px rgba(0, 0, 0, 0.4),
+    inset 0 1px rgba(255, 255, 255, 0.2);
 }
 
 .orbit-ring {
   position: absolute;
-  inset: -11px;
-  animation: orbit-spin 16s linear infinite;
+  inset: -14px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(255, 255, 255, 0.1);
+  animation: orbit-spin 18s linear infinite;
 }
 
 .orbit-dot {
   position: absolute;
-  width: 9px;
-  height: 9px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
-  box-shadow: 0 0 10px currentColor;
+  box-shadow: 0 0 14px currentColor;
 }
 
 .dot-arish {
-  top: 0;
-  left: 50%;
-  margin-left: -4.5px;
-  background: var(--blue);
-  color: var(--blue);
+  top: 0; left: 50%; margin-left: -5px;
+  background: var(--blue); color: var(--blue);
 }
-
 .dot-ayman {
-  bottom: 5px;
-  right: 1px;
-  background: var(--emerald);
-  color: var(--emerald);
+  bottom: 4px; right: 0;
+  background: var(--emerald); color: var(--emerald);
 }
-
 .dot-vishist {
-  bottom: 5px;
-  left: 1px;
-  background: var(--violet);
-  color: var(--violet);
+  bottom: 4px; left: 0;
+  background: var(--violet); color: var(--violet);
 }
 
-@keyframes orbit-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
+@keyframes orbit-spin { to { transform: rotate(360deg); } }
 
 .kicker {
   font-family: var(--font-display);
   font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--blue);
   text-align: center;
   margin-bottom: 12px;
+  text-shadow: 0 0 24px rgba(111, 147, 255, 0.35);
 }
 
 .title {
   font-family: var(--font-display);
-  font-size: clamp(2.3rem, 6.4vw, 3.2rem);
+  font-size: clamp(2.4rem, 6.8vw, 3.35rem);
   font-weight: 700;
   text-align: center;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   margin-bottom: 10px;
-  background: linear-gradient(120deg, #fff 0%, #cfe0ff 45%, #fff 100%);
-  background-size: 220% 100%;
+  background: linear-gradient(120deg, #fff 0%, #d4e2ff 40%, #c4b5fd 70%, #fff 100%);
+  background-size: 240% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  animation: shine 9s ease-in-out infinite;
+  animation: shine 8s ease-in-out infinite;
+  filter: drop-shadow(0 2px 20px rgba(111, 147, 255, 0.15));
 }
 
 @keyframes shine {
-  0%,
-  100% {
-    background-position: 0% 0;
-  }
-  50% {
-    background-position: 100% 0;
-  }
+  0%, 100% { background-position: 0% 0; }
+  50%      { background-position: 100% 0; }
 }
 
 .subtitle {
   text-align: center;
   font-weight: 600;
   color: var(--ink);
-  font-size: 1.02rem;
+  font-size: 1.05rem;
   margin-bottom: 6px;
 }
 
@@ -206,7 +194,7 @@ body::before {
   text-align: center;
   color: var(--muted);
   font-size: 0.9rem;
-  margin-bottom: 34px;
+  margin-bottom: 36px;
 }
 
 /* --------------------
@@ -222,20 +210,20 @@ body::before {
   display: flex;
   align-items: center;
   gap: 16px;
-  padding: 16px 18px;
+  padding: 17px 20px;
   border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
   border: 1px solid var(--line);
-  backdrop-filter: blur(16px) saturate(160%);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(170%);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
   cursor: pointer;
   overflow: hidden;
   box-shadow:
-    0 12px 30px rgba(0, 0, 0, 0.32),
-    inset 0 1px rgba(255, 255, 255, 0.06);
+    0 14px 36px rgba(0, 0, 0, 0.35),
+    inset 0 1px rgba(255, 255, 255, 0.08);
   opacity: 0;
-  transform: translateY(14px) translateZ(0);
-  animation: card-in 0.5s var(--ease) forwards;
+  transform: translateY(16px) translateZ(0);
+  animation: card-in 0.55s var(--ease) forwards;
   will-change: transform, opacity;
   transition:
     transform 0.4s var(--ease),
@@ -245,31 +233,22 @@ body::before {
   user-select: none;
 }
 
-.profile:nth-child(1) {
-  animation-delay: 0.05s;
-}
-.profile:nth-child(2) {
-  animation-delay: 0.13s;
-}
-.profile:nth-child(3) {
-  animation-delay: 0.21s;
-}
+.profile:nth-child(1) { animation-delay: 0.06s; }
+.profile:nth-child(2) { animation-delay: 0.14s; }
+.profile:nth-child(3) { animation-delay: 0.22s; }
 
 @keyframes card-in {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Shine sweep on hover */
+/* Shine sweep */
 .profile::before {
   content: "";
   position: absolute;
   inset: -60%;
-  background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+  background: linear-gradient(115deg, transparent, rgba(255, 255, 255, 0.2), transparent);
   transform: translateX(-180%) rotate(20deg);
-  transition: 1.1s;
+  transition: 1.15s;
   pointer-events: none;
 }
 
@@ -277,63 +256,25 @@ body::before {
   transform: translateX(180%) rotate(20deg);
 }
 
-.profile:hover {
-  transform: translateY(-6px) scale(1.015) translateZ(0);
-  border-color: var(--line-strong);
-  box-shadow:
-    0 18px 40px rgba(0, 0, 0, 0.4),
-    inset 0 1px rgba(255, 255, 255, 0.08);
-}
-
-.profile.active {
-  transform: translateY(-10px) scale(1.03) translateZ(0);
-  border-color: rgba(111, 147, 255, 0.4);
-  box-shadow:
-    0 20px 44px rgba(0, 0, 0, 0.42),
-    0 0 0 1px rgba(111, 147, 255, 0.15),
-    inset 0 1px rgba(255, 255, 255, 0.1);
-}
-
-/* Soft left accent tint when active, keyed to person */
-.profile[data-user="arish"].active {
-  border-color: rgba(111, 147, 255, 0.45);
-  box-shadow:
-    0 20px 44px rgba(0, 0, 0, 0.42),
-    0 0 0 1px rgba(111, 147, 255, 0.2),
-    inset 0 1px rgba(255, 255, 255, 0.1);
-}
-
-.profile[data-user="ayman"].active {
-  border-color: rgba(62, 207, 142, 0.45);
-  box-shadow:
-    0 20px 44px rgba(0, 0, 0, 0.42),
-    0 0 0 1px rgba(62, 207, 142, 0.2),
-    inset 0 1px rgba(255, 255, 255, 0.1);
-}
-
-.profile[data-user="vishist"].active {
-  border-color: rgba(155, 107, 255, 0.45);
-  box-shadow:
-    0 20px 44px rgba(0, 0, 0, 0.42),
-    0 0 0 1px rgba(155, 107, 255, 0.2),
-    inset 0 1px rgba(255, 255, 255, 0.1);
-}
-
-/* No blur() here on purpose — animating filter forces a repaint of
-   the whole element every frame and is the single biggest cause of
-   dropped frames on phones. Opacity + scale is compositor-only. */
-.profile.fade {
-  opacity: 0.25;
-  transform: scale(0.94) translateZ(0);
-  pointer-events: none;
-}
-
-.profile::after {
+/* Color wash on left edge per person */
+.profile[data-user="arish"]::after,
+.profile[data-user="ayman"]::after,
+.profile[data-user="vishist"]::after {
   content: "→";
   margin-left: auto;
   font-size: 20px;
   color: var(--muted);
   transition: 0.3s var(--ease);
+  position: relative;
+  z-index: 1;
+}
+
+.profile:hover {
+  transform: translateY(-7px) scale(1.02) translateZ(0);
+  border-color: var(--line-strong);
+  box-shadow:
+    0 22px 48px rgba(0, 0, 0, 0.45),
+    inset 0 1px rgba(255, 255, 255, 0.1);
 }
 
 .profile:hover::after {
@@ -341,47 +282,96 @@ body::before {
   color: var(--ink);
 }
 
-/* Square "signature" avatars — echoes the app's rounded-rectangle
-   language elsewhere instead of the generic circular-avatar default */
+/* Active state — person-colored */
+.profile.active {
+  transform: translateY(-10px) scale(1.035) translateZ(0);
+}
+
+.profile[data-user="arish"].active {
+  border-color: rgba(111, 147, 255, 0.5);
+  box-shadow:
+    0 22px 50px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(111, 147, 255, 0.25),
+    0 0 40px rgba(111, 147, 255, 0.12),
+    inset 0 1px rgba(255, 255, 255, 0.12);
+  background: linear-gradient(135deg, rgba(111, 147, 255, 0.12), rgba(255, 255, 255, 0.03));
+}
+
+.profile[data-user="ayman"].active {
+  border-color: rgba(62, 207, 142, 0.5);
+  box-shadow:
+    0 22px 50px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(62, 207, 142, 0.25),
+    0 0 40px rgba(62, 207, 142, 0.12),
+    inset 0 1px rgba(255, 255, 255, 0.12);
+  background: linear-gradient(135deg, rgba(62, 207, 142, 0.12), rgba(255, 255, 255, 0.03));
+}
+
+.profile[data-user="vishist"].active {
+  border-color: rgba(155, 107, 255, 0.5);
+  box-shadow:
+    0 22px 50px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(155, 107, 255, 0.25),
+    0 0 40px rgba(155, 107, 255, 0.12),
+    inset 0 1px rgba(255, 255, 255, 0.12);
+  background: linear-gradient(135deg, rgba(155, 107, 255, 0.12), rgba(255, 255, 255, 0.03));
+}
+
+.profile.fade {
+  opacity: 0.22;
+  transform: scale(0.93) translateZ(0);
+  pointer-events: none;
+}
+
+/* Avatars */
 .avatar {
-  width: 54px;
-  height: 54px;
-  border-radius: 16px;
+  width: 56px;
+  height: 56px;
+  border-radius: 17px;
   display: grid;
   place-items: center;
   font-family: var(--font-display);
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   color: #fff;
   flex-shrink: 0;
+  position: relative;
+  z-index: 1;
   box-shadow:
-    inset 0 1px rgba(255, 255, 255, 0.25),
-    0 8px 18px rgba(0, 0, 0, 0.28);
+    inset 0 1px rgba(255, 255, 255, 0.3),
+    0 10px 22px rgba(0, 0, 0, 0.32);
 }
 
 .arish {
-  background: linear-gradient(135deg, var(--blue), var(--blue-deep));
+  background: linear-gradient(145deg, #8ba4ff, var(--blue-deep));
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.3),
+    0 10px 22px rgba(63, 95, 224, 0.4);
 }
 
 .ayman {
-  background: linear-gradient(135deg, var(--emerald), var(--emerald-deep));
+  background: linear-gradient(145deg, #5ee4a8, var(--emerald-deep));
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.3),
+    0 10px 22px rgba(31, 158, 92, 0.4);
 }
 
 .vishist {
-  background: linear-gradient(135deg, var(--violet), var(--violet-deep));
+  background: linear-gradient(145deg, #b794ff, var(--violet-deep));
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.3),
+    0 10px 22px rgba(106, 63, 224, 0.4);
 }
 
-.profile-info {
-  flex: 1;
-  min-width: 0;
-}
+.profile-info { flex: 1; min-width: 0; position: relative; z-index: 1; }
 
 .profile-name {
   font-family: var(--font-display);
-  font-size: 1.2rem;
+  font-size: 1.22rem;
   font-weight: 600;
   color: var(--ink);
+  letter-spacing: -0.01em;
 }
 
 .profile-desc {
@@ -393,9 +383,6 @@ body::before {
 /* --------------------
    Login panel
 -------------------- */
-/* Wrapper drives the height animation via grid-template-rows
-   (0fr -> 1fr). This is compositor-friendly — no layout thrash on
-   every frame like max-height — so it stays smooth on phones. */
 .login-panel-wrap {
   display: grid;
   grid-template-rows: 0fr;
@@ -411,15 +398,16 @@ body::before {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 26px 22px;
+  padding: 28px 24px;
   border-radius: var(--radius-lg);
-  background: linear-gradient(160deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.02));
   border: 1px solid var(--line);
   box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.35),
-    inset 0 1px rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(16px) saturate(160%);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
+    0 24px 64px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(111, 147, 255, 0.06),
+    inset 0 1px rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(18px) saturate(170%);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
   opacity: 0;
   overflow: hidden;
   min-height: 0;
@@ -434,9 +422,7 @@ body::before {
   transform: translateY(0);
 }
 
-.hidden {
-  display: none;
-}
+.hidden { display: none; }
 
 .selected-user {
   display: flex;
@@ -448,36 +434,30 @@ body::before {
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 1.3rem;
+  letter-spacing: -0.01em;
 }
 
-.selected-user .profile-desc {
-  margin-top: 2px;
-}
+.selected-user .profile-desc { margin-top: 2px; }
 
 input {
   width: 100%;
-  padding: 15px 16px;
+  padding: 15px 17px;
   border-radius: var(--radius-md);
-  background: rgba(8, 12, 26, 0.6);
+  background: rgba(5, 8, 20, 0.65);
   border: 1px solid rgba(255, 255, 255, 0.12);
   color: var(--ink);
-  font-size: 16px; /* prevents iOS zoom */
+  font-size: 16px;
   font-family: var(--font-body);
-  transition:
-    border-color 0.25s,
-    box-shadow 0.25s,
-    background 0.25s;
+  transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
 }
 
-input::placeholder {
-  color: var(--muted-2);
-}
+input::placeholder { color: var(--muted-2); }
 
 input:focus {
   outline: none;
   border-color: var(--blue);
-  box-shadow: 0 0 0 4px rgba(111, 147, 255, 0.16);
-  background: rgba(8, 12, 26, 0.8);
+  box-shadow: 0 0 0 4px rgba(111, 147, 255, 0.18);
+  background: rgba(5, 8, 20, 0.85);
 }
 
 button {
@@ -505,28 +485,31 @@ button {
 }
 
 .back-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.11);
   border-color: var(--line-strong);
 }
 
 .login-btn {
   color: #fff;
   font-size: 1rem;
-  background: linear-gradient(135deg, var(--blue), var(--violet));
-  box-shadow: 0 16px 34px rgba(111, 147, 255, 0.28);
+  letter-spacing: 0.01em;
+  background: linear-gradient(135deg, #8ba4ff 0%, var(--blue) 40%, var(--violet) 100%);
+  box-shadow:
+    0 16px 36px rgba(111, 147, 255, 0.32),
+    inset 0 1px rgba(255, 255, 255, 0.2);
 }
 
 .login-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 22px 46px rgba(111, 147, 255, 0.36);
+  box-shadow:
+    0 22px 48px rgba(111, 147, 255, 0.4),
+    inset 0 1px rgba(255, 255, 255, 0.25);
 }
 
-.login-btn:active {
-  transform: translateY(0);
-}
+.login-btn:active { transform: translateY(0); }
 
 .login-btn:disabled {
-  opacity: 0.62;
+  opacity: 0.6;
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
@@ -540,87 +523,39 @@ button {
   min-height: 20px;
 }
 
-.error-message:not(:empty)::before {
-  content: "⚠ ";
-}
+.error-message:not(:empty)::before { content: "⚠ "; }
 
 /* --------------------
    Responsive
 -------------------- */
 @media (max-width: 600px) {
-  body {
-    padding: 22px 18px;
-  }
-
-  .title {
-    font-size: 2.1rem;
-  }
-
-  .kicker {
-    font-size: 0.64rem;
-    letter-spacing: 0.18em;
-  }
-
-  .tagline {
-    font-size: 0.85rem;
-    margin-bottom: 26px;
-  }
-
-  .profile {
-    padding: 14px 16px;
-  }
-
-  .avatar {
-    width: 50px;
-    height: 50px;
-    font-size: 0.9rem;
-  }
-
-  .orbit {
-    width: 56px;
-    height: 56px;
-    margin-bottom: 14px;
-  }
+  body { padding: 22px 18px; }
+  .title { font-size: 2.15rem; }
+  .kicker { font-size: 0.64rem; letter-spacing: 0.18em; }
+  .tagline { font-size: 0.85rem; margin-bottom: 28px; }
+  .profile { padding: 15px 16px; }
+  .avatar { width: 50px; height: 50px; font-size: 0.92rem; border-radius: 15px; }
+  .orbit { width: 60px; height: 60px; margin-bottom: 16px; }
+  .login-panel { padding: 24px 20px; }
 }
 
-/* Mobile perf: backdrop-filter blur is GPU-heavy — drop it on small
-   screens rather than risk the jank we already fixed once. */
 @media (max-width: 768px) {
   .profile,
   .login-panel {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    background: rgba(20, 27, 54, 0.92);
+    background: rgba(16, 22, 46, 0.94);
   }
-
-  .profile::before {
-    display: none;
-  }
-
-  /* These run continuously and cost nothing on their own, but
-     stacked with the tap-driven card/panel transition they were
-     part of what pushed the page into low frame rates. Turn off
-     the two infinite loops, and drop the box-shadow transition
-     (paint-heavy) on hover/active states. */
-  .title {
-    animation: none;
-    background-position: 0% 0;
-  }
-
-  .orbit-ring {
-    animation: none;
-  }
-
+  .profile::before { display: none; }
+  .title { animation: none; background-position: 0% 0; }
+  .orbit-ring { animation: none; }
   .profile:hover,
-  .profile.active {
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.32);
-  }
+  .profile.active { box-shadow: 0 14px 36px rgba(0, 0, 0, 0.35); }
+  body::after { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
