@@ -63,10 +63,12 @@ function setLoading(loading) {
 }
 
 // --------------------
-// Profile Selection
+// Premium Profile Animation
 // --------------------
 
-document.querySelectorAll(".profile").forEach(card => {
+const cards = document.querySelectorAll(".profile");
+
+cards.forEach(card => {
 
     card.addEventListener("click", () => {
 
@@ -82,15 +84,41 @@ document.querySelectorAll(".profile").forEach(card => {
         selectedAvatar.className =
             `avatar ${selectedUser}`;
 
-        profiles.classList.add("hidden");
+        // Blur every other card
+        cards.forEach(c => {
 
-        loginPanel.classList.remove("hidden");
+            if (c === card) {
+
+                c.classList.add("active");
+                c.classList.remove("fade");
+
+            } else {
+
+                c.classList.add("fade");
+                c.classList.remove("active");
+
+            }
+
+        });
 
         passwordEl.value = "";
 
         errorMessage.textContent = "";
 
-        passwordEl.focus();
+        // Wait for animation before opening login
+        setTimeout(() => {
+
+            loginPanel.classList.remove("hidden");
+
+            requestAnimationFrame(() => {
+
+                loginPanel.classList.add("show");
+
+            });
+
+            passwordEl.focus();
+
+        }, 450);
 
     });
 
@@ -102,124 +130,26 @@ document.querySelectorAll(".profile").forEach(card => {
 
 backBtn.addEventListener("click", () => {
 
-    selectedUser = "";
+    loginPanel.classList.remove("show");
 
-    passwordEl.value = "";
+    setTimeout(() => {
 
-    errorMessage.textContent = "";
+        loginPanel.classList.add("hidden");
 
-    loginPanel.classList.add("hidden");
+        passwordEl.value = "";
 
-    profiles.classList.remove("hidden");
+        errorMessage.textContent = "";
 
-});
+        selectedUser = "";
 
-// --------------------
-// Login
-// --------------------
+        cards.forEach(card => {
 
-async function login() {
+            card.classList.remove("active");
+            card.classList.remove("fade");
 
-    if (!selectedUser) {
+        });
 
-        errorMessage.textContent =
-            "Please choose a profile.";
-
-        return;
-
-    }
-
-    if (!passwordEl.value.trim()) {
-
-        errorMessage.textContent =
-            "Please enter your password.";
-
-        passwordEl.focus();
-
-        return;
-
-    }
-
-    if (!auth) {
-
-        errorMessage.textContent =
-            "Firebase not configured.";
-
-        return;
-
-    }
-
-    setLoading(true);
-
-    try {
-
-        await setPersistence(
-            auth,
-            browserLocalPersistence
-        );
-
-        await signInWithEmailAndPassword(
-
-            auth,
-
-            USER_MAP[selectedUser],
-
-            passwordEl.value
-
-        );
-
-        window.location.href =
-            "./dashboard.html";
-
-    }
-
-    catch (err) {
-
-        console.error(err);
-
-        switch (err.code) {
-
-            case "auth/wrong-password":
-                errorMessage.textContent =
-                    "Wrong password.";
-                break;
-
-            case "auth/user-not-found":
-                errorMessage.textContent =
-                    "Account not found.";
-                break;
-
-            case "auth/invalid-credential":
-                errorMessage.textContent =
-                    "Invalid credentials.";
-                break;
-
-            default:
-                errorMessage.textContent =
-                    "Unable to sign in.";
-        }
-
-    }
-
-    finally {
-
-        setLoading(false);
-
-    }
-
-}
-
-// --------------------
-
-loginBtn.addEventListener("click", login);
-
-passwordEl.addEventListener("keydown", e => {
-
-    if (e.key === "Enter") {
-
-        login();
-
-    }
+    }, 400);
 
 });
 
