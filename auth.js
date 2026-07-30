@@ -52,7 +52,7 @@ export async function logoutUser() {
   return signOut(authRef);
 }
 
-export async function requireAuth(redirectTo = "./login.html") {
+export async function requireAuth(redirectTo = "./index.html") {
   const user = await waitForAuth();
   if (!user) {
     window.location.href = redirectTo;
